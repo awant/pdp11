@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Stuff">
+      <UniqueIdentifier>{d4d2e1c2-19e4-474d-8353-91e2226b01d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PdpEmulatorInterface">
+      <UniqueIdentifier>{5e4d89bb-f1d0-48a4-980d-07bd55a8537c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="PdpEmulatorInterface.h">
+      <Filter>PdpEmulatorInterface</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="PdpEmulatorInterface.cpp">
+      <Filter>PdpEmulatorInterface</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>Stuff</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
