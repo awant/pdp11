@@ -28,37 +28,86 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.Display = new System.Windows.Forms.PictureBox();
+            this.programText = new System.Windows.Forms.ListView();
+            this.internalInfo = new System.Windows.Forms.TextBox();
+            this.runButton = new System.Windows.Forms.Button();
+            this.resetButton = new System.Windows.Forms.Button();
+            this.stepButton = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.Display)).BeginInit();
             this.SuspendLayout();
             // 
-            // textBox1
+            // Display
             // 
-            this.textBox1.Location = new System.Drawing.Point(160, 66);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(233, 20);
-            this.textBox1.TabIndex = 0;
+            this.Display.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Display.Location = new System.Drawing.Point(13, 13);
+            this.Display.Name = "Display";
+            this.Display.Size = new System.Drawing.Size(512, 512);
+            this.Display.TabIndex = 0;
+            this.Display.TabStop = false;
             // 
-            // button1
+            // programText
             // 
-            this.button1.Location = new System.Drawing.Point(191, 140);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(112, 51);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.programText.Location = new System.Drawing.Point(531, 13);
+            this.programText.Name = "programText";
+            this.programText.Size = new System.Drawing.Size(574, 264);
+            this.programText.TabIndex = 1;
+            this.programText.UseCompatibleStateImageBehavior = false;
+            // 
+            // internalInfo
+            // 
+            this.internalInfo.Location = new System.Drawing.Point(531, 321);
+            this.internalInfo.Multiline = true;
+            this.internalInfo.Name = "internalInfo";
+            this.internalInfo.Size = new System.Drawing.Size(574, 257);
+            this.internalInfo.TabIndex = 2;
+            this.internalInfo.Text = "Registers\r\nR0:\r\nR1:\r\nR2:\r\nR3:\r\nR4:\r\nR5:\r\nR6:\r\nR7:";
+            // 
+            // runButton
+            // 
+            this.runButton.Location = new System.Drawing.Point(201, 533);
+            this.runButton.Name = "runButton";
+            this.runButton.Size = new System.Drawing.Size(110, 45);
+            this.runButton.TabIndex = 3;
+            this.runButton.Text = "Run";
+            this.runButton.UseVisualStyleBackColor = true;
+            this.runButton.Click += new System.EventHandler(this.runButton_Click);
+            // 
+            // resetButton
+            // 
+            this.resetButton.Location = new System.Drawing.Point(13, 533);
+            this.resetButton.Name = "resetButton";
+            this.resetButton.Size = new System.Drawing.Size(110, 45);
+            this.resetButton.TabIndex = 4;
+            this.resetButton.Text = "Reset";
+            this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
+            // 
+            // stepButton
+            // 
+            this.stepButton.Location = new System.Drawing.Point(415, 533);
+            this.stepButton.Name = "stepButton";
+            this.stepButton.Size = new System.Drawing.Size(110, 45);
+            this.stepButton.TabIndex = 5;
+            this.stepButton.Text = "Step";
+            this.stepButton.UseVisualStyleBackColor = true;
+            this.stepButton.Click += new System.EventHandler(this.stepButton_Click);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1056, 438);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
+            this.ClientSize = new System.Drawing.Size(1117, 590);
+            this.Controls.Add(this.stepButton);
+            this.Controls.Add(this.resetButton);
+            this.Controls.Add(this.runButton);
+            this.Controls.Add(this.internalInfo);
+            this.Controls.Add(this.programText);
+            this.Controls.Add(this.Display);
             this.Name = "MainWindow";
-            this.Text = "Form1";
+            this.Text = "PDP-11 Emulator";
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.Display)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -66,8 +115,13 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.PictureBox Display;
+        private System.Windows.Forms.ListView programText;
+        private System.Windows.Forms.TextBox internalInfo;
+        private System.Windows.Forms.Button runButton;
+        private System.Windows.Forms.Button resetButton;
+        private System.Windows.Forms.Button stepButton;
+
     }
 }
 

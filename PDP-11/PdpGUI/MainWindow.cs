@@ -14,11 +14,12 @@ namespace PdpGUI
 {
     public partial class MainWindow : Form
     {
-        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)] 
         public static extern int Sum(int a, int b);
-
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int Sub(int a, int b);
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern std::vector<int> pdpInitializer();
 
         public MainWindow()
         {
@@ -30,9 +31,20 @@ namespace PdpGUI
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void runButton_Click(object sender, EventArgs e)
         {
-            textBox1.Text = Sum(2, 3).ToString() + " " + Sub(5, 3).ToString();
+
         }
+
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void stepButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
