@@ -28,12 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("ListViewGroup", System.Windows.Forms.HorizontalAlignment.Left);
             this.Display = new System.Windows.Forms.PictureBox();
             this.programText = new System.Windows.Forms.ListView();
             this.internalInfo = new System.Windows.Forms.TextBox();
             this.runButton = new System.Windows.Forms.Button();
             this.resetButton = new System.Windows.Forms.Button();
             this.stepButton = new System.Windows.Forms.Button();
+            this.mainTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.Display)).BeginInit();
             this.SuspendLayout();
             // 
@@ -48,6 +51,10 @@
             // 
             // programText
             // 
+            listViewGroup1.Header = "ListViewGroup";
+            listViewGroup1.Name = "listViewGroup1";
+            this.programText.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1});
             this.programText.Location = new System.Drawing.Point(531, 13);
             this.programText.Name = "programText";
             this.programText.Size = new System.Drawing.Size(574, 264);
@@ -56,9 +63,12 @@
             // 
             // internalInfo
             // 
+            this.internalInfo.Cursor = System.Windows.Forms.Cursors.Default;
+            this.internalInfo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.internalInfo.Location = new System.Drawing.Point(531, 321);
             this.internalInfo.Multiline = true;
             this.internalInfo.Name = "internalInfo";
+            this.internalInfo.ReadOnly = true;
             this.internalInfo.Size = new System.Drawing.Size(574, 257);
             this.internalInfo.TabIndex = 2;
             this.internalInfo.Text = "Registers\r\nR0:\r\nR1:\r\nR2:\r\nR3:\r\nR4:\r\nR5:\r\nR6:\r\nR7:";
@@ -93,6 +103,11 @@
             this.stepButton.UseVisualStyleBackColor = true;
             this.stepButton.Click += new System.EventHandler(this.stepButton_Click);
             // 
+            // mainTimer
+            // 
+            this.mainTimer.Interval = 750;
+            this.mainTimer.Tick += new System.EventHandler(this.mainTimer_Tick);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -121,6 +136,7 @@
         private System.Windows.Forms.Button runButton;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Button stepButton;
+        private System.Windows.Forms.Timer mainTimer;
 
     }
 }
