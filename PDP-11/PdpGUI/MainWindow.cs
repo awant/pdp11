@@ -27,6 +27,7 @@ namespace PdpGUI
             InitializeComponent();
             initProgramText();
             initProcInfo();
+            CreateBitmapAtRuntime();
         }
 
         private void initProgramText()
@@ -115,5 +116,26 @@ namespace PdpGUI
             a = 0;
         }
 
+
+        //----------------------------------------------------------------------------
+        //PictureBox pictureBox1 = new PictureBox();
+        public void CreateBitmapAtRuntime()
+        {
+            this.Controls.Add(Display);
+            Bitmap flag = new Bitmap(Display.Size.Width, Display.Size.Height);
+            Graphics flagGraphics = Graphics.FromImage(flag);
+            int red = 0;
+            int white = 11;
+            while (white <= Display.Size.Height)
+            {
+                flagGraphics.FillRectangle(Brushes.Red, 0, red, Display.Size.Width, 10);
+                flagGraphics.FillRectangle(Brushes.White, 0, white, Display.Size.Width, 10);
+                red += 20;
+                white += 20;
+            }
+            Display.Image = flag;
+
+        }
+        //----------------------------------------------------------------------------
     }
 }
