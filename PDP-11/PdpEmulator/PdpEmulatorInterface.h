@@ -14,7 +14,4 @@ extern "C"
 	PDP_EMU_API int getIndexOfCurrentInstruction();
 	PDP_EMU_API int* getRegisters();
 	PDP_EMU_API int* getStatusFlags();
-
-	PDP_EMU_API int Sum(int a, int b);
-	PDP_EMU_API int Sub(int a, int b);
 }

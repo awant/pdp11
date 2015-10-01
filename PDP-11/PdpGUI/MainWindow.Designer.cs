@@ -29,14 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("ListViewGroup", System.Windows.Forms.HorizontalAlignment.Left);
             this.Display = new System.Windows.Forms.PictureBox();
             this.programText = new System.Windows.Forms.ListView();
-            this.internalInfo = new System.Windows.Forms.TextBox();
             this.runButton = new System.Windows.Forms.Button();
             this.resetButton = new System.Windows.Forms.Button();
             this.stepButton = new System.Windows.Forms.Button();
             this.mainTimer = new System.Windows.Forms.Timer(this.components);
+            this.procInfo = new System.Windows.Forms.ListView();
             ((System.ComponentModel.ISupportInitialize)(this.Display)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,27 +50,16 @@
             // 
             // programText
             // 
-            listViewGroup1.Header = "ListViewGroup";
-            listViewGroup1.Name = "listViewGroup1";
-            this.programText.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1});
+            this.programText.BackColor = System.Drawing.SystemColors.Window;
+            this.programText.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.programText.HideSelection = false;
             this.programText.Location = new System.Drawing.Point(531, 13);
+            this.programText.MultiSelect = false;
             this.programText.Name = "programText";
-            this.programText.Size = new System.Drawing.Size(574, 264);
+            this.programText.Size = new System.Drawing.Size(574, 366);
             this.programText.TabIndex = 1;
             this.programText.UseCompatibleStateImageBehavior = false;
-            // 
-            // internalInfo
-            // 
-            this.internalInfo.Cursor = System.Windows.Forms.Cursors.Default;
-            this.internalInfo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.internalInfo.Location = new System.Drawing.Point(531, 321);
-            this.internalInfo.Multiline = true;
-            this.internalInfo.Name = "internalInfo";
-            this.internalInfo.ReadOnly = true;
-            this.internalInfo.Size = new System.Drawing.Size(574, 257);
-            this.internalInfo.TabIndex = 2;
-            this.internalInfo.Text = "Registers\r\nR0:\r\nR1:\r\nR2:\r\nR3:\r\nR4:\r\nR5:\r\nR6:\r\nR7:";
+            this.programText.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.programText_ColumnWidthChanging);
             // 
             // runButton
             // 
@@ -108,23 +96,36 @@
             this.mainTimer.Interval = 750;
             this.mainTimer.Tick += new System.EventHandler(this.mainTimer_Tick);
             // 
+            // procInfo
+            // 
+            this.procInfo.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.procInfo.Enabled = false;
+            this.procInfo.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.procInfo.Location = new System.Drawing.Point(531, 385);
+            this.procInfo.MultiSelect = false;
+            this.procInfo.Name = "procInfo";
+            this.procInfo.Size = new System.Drawing.Size(574, 193);
+            this.procInfo.TabIndex = 6;
+            this.procInfo.UseCompatibleStateImageBehavior = false;
+            this.procInfo.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.procInfo_ColumnWidthChanging);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1117, 590);
+            this.Controls.Add(this.procInfo);
             this.Controls.Add(this.stepButton);
             this.Controls.Add(this.resetButton);
             this.Controls.Add(this.runButton);
-            this.Controls.Add(this.internalInfo);
             this.Controls.Add(this.programText);
             this.Controls.Add(this.Display);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "MainWindow";
             this.Text = "PDP-11 Emulator";
             this.Load += new System.EventHandler(this.MainWindow_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Display)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -132,11 +133,11 @@
 
         private System.Windows.Forms.PictureBox Display;
         private System.Windows.Forms.ListView programText;
-        private System.Windows.Forms.TextBox internalInfo;
         private System.Windows.Forms.Button runButton;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Button stepButton;
         private System.Windows.Forms.Timer mainTimer;
+        private System.Windows.Forms.ListView procInfo;
 
     }
 }
