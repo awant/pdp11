@@ -19,6 +19,9 @@ namespace PdpGUI
         //[DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         //public static extern int getIndexOfCurrentInstruction();
 
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int Check();
+
         Dictionary<string, int> dictionary =
 	    new Dictionary<string, int>();
 
@@ -35,13 +38,17 @@ namespace PdpGUI
             programText.View = View.Details;
             programText.Columns.Add("#", -2, HorizontalAlignment.Left);
             programText.Columns.Add("Command", -2, HorizontalAlignment.Left);
+
+            var item = new ListViewItem(new[] { "check", Check().ToString() });
+            programText.Items.Add(item);
+
             // getNumberOfCommands();
             // getCommands();
-            for (int i = 0; i < 300; i++)
+           /* for (int i = 0; i < 300; i++)
             {
                 var item = new ListViewItem(new[] { "line number", "command" });
                 programText.Items.Add(item);
-            }
+            }*/
         }
 
         private void initProcInfo()
