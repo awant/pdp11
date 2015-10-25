@@ -129,19 +129,28 @@ namespace PdpGUI
         public void CreateBitmapAtRuntime()
         {
             this.Controls.Add(Display);
-            Bitmap flag = new Bitmap(Display.Size.Width, Display.Size.Height);
-            Graphics flagGraphics = Graphics.FromImage(flag);
-            int red = 0;
-            int white = 11;
-            while (white <= Display.Size.Height)
-            {
-                flagGraphics.FillRectangle(Brushes.Red, 0, red, Display.Size.Width, 10);
-                flagGraphics.FillRectangle(Brushes.White, 0, white, Display.Size.Width, 10);
-                red += 20;
-                white += 20;
-            }
-            Display.Image = flag;
 
+
+            Bitmap bmpImage = new Bitmap("c:\\Users\\Roman\\Source\\pdp-11\\PDP-11\\PdpGUI\\image.bmp");
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, bmpImage.Width, bmpImage.Height);
+            System.Drawing.Imaging.BitmapData bmpData = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
+            IntPtr ptr = bmpData.Scan0;
+            int bytes = Math.Abs(bmpData.Stride) * bmpImage.Height;
+            byte[] colors = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ptr, colors, 0, bytes);
+            // Unlock
+            bmpImage.UnlockBits(bmpData);
+            // Now we have string with 0 for white and 1 for black pixel - colors
+            // bytes = 2048
+
+            // Copy from array to image
+            System.Drawing.Imaging.BitmapData bmpData2 = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
+            IntPtr ptr2 = bmpData2.Scan0;
+            Marshal.Copy(colors, 0, ptr2, bytes);
+            bmpImage.UnlockBits(bmpData2);
+
+            Display.Image = bmpImage;
         }
         //----------------------------------------------------------------------------
     }
