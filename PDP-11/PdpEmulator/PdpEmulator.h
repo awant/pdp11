@@ -33,6 +33,7 @@ public:
 	InstructionSet * GetInstructionSet() { return instructionSet; }
 
 	int Check(int val);
+	__declspec(dllexport) wchar_t** __stdcall GetData();
 
 private:
 	bool getFlagBit(int n) { return (processorStatusWord >> n) & 1; }

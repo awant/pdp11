@@ -25,12 +25,25 @@ namespace PdpGUI
         Dictionary<string, int> dictionary =
 	    new Dictionary<string, int>();
 
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr GetData();
+
         public MainWindow()
         {
             InitializeComponent();
             initProgramText();
             initProcInfo();
             CreateBitmapAtRuntime();
+            // Check getting data
+            IntPtr ptr = GetData();
+            IntPtr strPtr;
+            for (int i = 0; i < 2; i++)
+            {
+                Console.WriteLine("i = " + i);
+                strPtr = Marshal.ReadIntPtr(ptr);
+                Console.WriteLine(Marshal.PtrToStringAnsi(strPtr));
+                ptr += Marshal.SizeOf(typeof(IntPtr));
+            }
         }
 
         private void initProgramText()
