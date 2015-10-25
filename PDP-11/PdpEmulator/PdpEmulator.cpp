@@ -29,3 +29,10 @@ int PdpEmulator::Check(int val) {
 	GetInstructionSet()->GetInstruction(val)();
 	return 2;
 }
+
+__declspec(dllexport) wchar_t** __stdcall PdpEmulator::GetData() {
+	wchar_t** wct = new wchar_t*[2];
+	wct[0] = L"Awant begin";
+	wct[1] = L"Awant end";
+	return wct;
+}
