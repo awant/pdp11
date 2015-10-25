@@ -12,6 +12,7 @@ public:
 	InstructionSet(PdpEmulator * emulator);
 	~InstructionSet();
 	std::function<void()> GetInstruction(int number) { return table[number]; }
+	std::string GetInstructionString(int number);
 
 	void FreeInstruction() { assert(0); }
 
@@ -35,10 +36,10 @@ private:
 	void * getFrontOperandRegister(word instruction, bool isByte);
 	void * getBackOperandConstant(word instruction, bool isByte);
 	void * chooseAddressByMode(word mode, word number, bool isByte);
+	std::string getOperandString(word mode, word number);
 
 	std::function<void()>	table[0177777];
 	std::string				names[0177777];
 	PdpEmulator *			pdpEmulator;
 };
-
 #endif // _INSTRUCTION_SET_H_

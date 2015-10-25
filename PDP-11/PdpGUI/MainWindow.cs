@@ -35,7 +35,7 @@ namespace PdpGUI
             initProcInfo();
             CreateBitmapAtRuntime();
             // Check getting data
-            IntPtr ptr = GetData();
+            /*IntPtr ptr = GetData();
             IntPtr strPtr;
             for (int i = 0; i < 2; i++)
             {
@@ -43,7 +43,7 @@ namespace PdpGUI
                 strPtr = Marshal.ReadIntPtr(ptr);
                 Console.WriteLine(Marshal.PtrToStringAnsi(strPtr));
                 ptr += Marshal.SizeOf(typeof(IntPtr));
-            }
+            }*/
         }
 
         private void initProgramText()
