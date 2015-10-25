@@ -2,14 +2,14 @@
 #define _SINGLETON_H_
 
 template <class T>
-class Singleton 
+class Singleton
 {
 public:
 	Singleton() {}
 	virtual ~Singleton() {}
 	static T *IPtr();
 	static T &I();
-	static void DestroyInstance();
+	static void destroyInstance();
 
 protected:
 	static T * self;
@@ -34,7 +34,7 @@ T& Singleton<T>::I() {
 }
 
 template <class T>
-void Singleton<T>::DestroyInstance() {
+void Singleton<T>::destroyInstance() {
 	delete self;
 	self = nullptr;
 }

@@ -2,6 +2,8 @@
 #define _INSTRUCTION_SET_H_
 
 #include <functional>
+#include <assert.h>
+#include "PdpConstants.h"
 
 class PdpEmulator;
 
@@ -11,16 +13,24 @@ public:
 	~InstructionSet();
 	std::function<void()> GetInstruction(int number) { return table[number]; }
 
-	void FreeInstruction() {}
-	void Add(void * src, void * dest);
-	void Move(void * src, void * dest);
+	void FreeInstruction() { assert(0); }
+
+	void MOV(void * src, void * dst);
+	void MOVB(void * src, void * dst);
+	void ADD(void * src, void * dst);
+	void SUB(void * src, void * dst);
+	void SOB(void * src, void * dst);
+	void JMP(void * dst);
+	void INC(void * dest);
+	void DEC(void * dest);
 
 private:
-	void * getBackOperand(int instruction, bool isByte);
-	void * getFrontOperand(int instruction, bool isByte);
-	void * getBackOperandRegister(int instruction, bool isByte);
-	void * getFrontOperandRegister(int instruction, bool isByte);
-	void * chooseAddressByMode(int mode, int number, bool isByte);
+	void * getBackOperand(word instruction, bool isByte);
+	void * getFrontOperand(word instruction, bool isByte);
+	void * getBackOperandRegister(word instruction, bool isByte);
+	void * getFrontOperandRegister(word instruction, bool isByte);
+	void * getBackOperandConstant(word instruction, bool isByte);
+	void * chooseAddressByMode(word mode, word number, bool isByte);
 
 	std::function<void()> table[0177777];
 	PdpEmulator * pdpEmulator;
