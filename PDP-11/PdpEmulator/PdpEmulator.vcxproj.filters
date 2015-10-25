@@ -36,6 +36,7 @@
     <ClInclude Include="program.h">
       <Filter>PdpEmulator</Filter>
     </ClInclude>
+    <ClInclude Include="programOnASM.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
