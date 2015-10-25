@@ -116,16 +116,16 @@ CMP R0, upWords
 BEQ 9
 MOV #0, (R2)+
 ADD #020, R0
-BR - 12
+BR -12
 MOV #0, R0
 MOV #0, R1
 CMP R0, hI
-BE 60
+BEQ 60
 CMP R1, bW
 BGE 9
 MOV #0, (R2)+
 ADD #020, R1
-BE - 12
+BR -12
 MOV #0, R5
 ADD #wS, R5
 SUB #bW, R5
@@ -133,20 +133,20 @@ CMP R1, R5
 BGE 9
 MOV(R3) + , (R2)+
 ADD #020, R1
-BE - 21
+BR -21
 MOV #0, R5
 ADD #wS, R5
 CMP R1, R5
 BGE 9
 MOV(R3) + , (R2)+
 ADD #020, R1
-BE - 18
+BR -18
 ADD #01, R0
-BE - 66
+BR -66
 MOV #0, R0
 CMP R0, bottomWords
 BEQ 9
 MOV #0, (R2)+
 ADD #020, R0
-BR - 12
+BR -12
 HALT
