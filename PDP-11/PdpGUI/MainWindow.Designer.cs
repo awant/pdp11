@@ -44,7 +44,7 @@
             this.Display.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.Display.Location = new System.Drawing.Point(13, 13);
             this.Display.Name = "Display";
-            this.Display.Size = new System.Drawing.Size(512, 512);
+            this.Display.Size = new System.Drawing.Size(256, 256);
             this.Display.TabIndex = 0;
             this.Display.TabStop = false;
             // 

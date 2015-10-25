@@ -59,4 +59,9 @@
       <Filter>StuffVS</Filter>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="image.bmp">
+      <Filter>PdpEmulator</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

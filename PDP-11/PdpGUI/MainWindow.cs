@@ -131,7 +131,7 @@ namespace PdpGUI
             this.Controls.Add(Display);
 
 
-            /*Bitmap bmpImage = new Bitmap("c:\\Users\\Mikhail\\Source\\pdp-11\\PDP-11\\PdpGUI\\image.bmp");
+            Bitmap bmpImage = new Bitmap("..\\PdpEmulator\\image.bmp");
             // Lock the bitmap's bits.  
             Rectangle rect = new Rectangle(0, 0, bmpImage.Width, bmpImage.Height);
             System.Drawing.Imaging.BitmapData bmpData = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
@@ -150,7 +150,7 @@ namespace PdpGUI
             Marshal.Copy(colors, 0, ptr2, bytes);
             bmpImage.UnlockBits(bmpData2);
 
-            Display.Image = bmpImage;*/
+            Display.Image = bmpImage;
         }
         //----------------------------------------------------------------------------
     }
