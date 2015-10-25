@@ -20,7 +20,11 @@ public:
 	void ADD(void * src, void * dst);
 	void SUB(void * src, void * dst);
 	void SOB(void * src, void * dst);
+	void CMP(void * src, void * dst);
 	void JMP(void * dst);
+	void BR(int instr);
+	void BGE(int instr);
+	void BEQ(int instr);
 	void INC(void * dest);
 	void DEC(void * dest);
 
@@ -32,8 +36,9 @@ private:
 	void * getBackOperandConstant(word instruction, bool isByte);
 	void * chooseAddressByMode(word mode, word number, bool isByte);
 
-	std::function<void()> table[0177777];
-	PdpEmulator * pdpEmulator;
+	std::function<void()>	table[0177777];
+	std::string				names[0177777];
+	PdpEmulator *			pdpEmulator;
 };
 
 #endif // _INSTRUCTION_SET_H_

@@ -6,25 +6,20 @@
 InstructionSet::InstructionSet(PdpEmulator * emulator) {
 	pdpEmulator = emulator;
 
-	for (int i = 0; i < 0177777; i++)
-		table[i] = std::bind(&InstructionSet::FreeInstruction, this);
+	for (int i = 0; i < 0177777; i++)		{ names[i] = "NULL"; table[i] = std::bind(&InstructionSet::FreeInstruction, this); }
 
-	for (int i = 010000; i < 017777; i++)
-		table[i] = std::bind(&InstructionSet::MOV, this, getFrontOperand(i, false), getBackOperand(i, false));
-	for (int i = 0110000; i < 0117777; i++)
-		table[i] = std::bind(&InstructionSet::MOVB, this, getFrontOperand(i, false), getBackOperand(i, false));
-	for (int i = 060000; i < 067777; i++)
-		table[i] = std::bind(&InstructionSet::ADD, this, getFrontOperand(i, false), getBackOperand(i, false));
-	for (int i = 0160000; i < 0167777; i++)
-		table[i] = std::bind(&InstructionSet::SUB, this, getFrontOperand(i, false), getBackOperand(i, false));
-	for (int i = 077000; i < 077777; i++)
-		table[i] = std::bind(&InstructionSet::SOB, this, getFrontOperandRegister(i, false), getBackOperandConstant(i, false));
-	for (int i = 0100; i < 0177; i++)
-		table[i] = std::bind(&InstructionSet::JMP, this, getBackOperand(i, false));
-	for (int i = 05200; i < 05277; i++)
-		table[i] = std::bind(&InstructionSet::INC, this, getBackOperand(i, false));
-	for (int i = 05300; i < 05377; i++)
-		table[i] = std::bind(&InstructionSet::DEC, this, getBackOperand(i, false));
+	for (int i = 010000; i < 017777; i++)   { names[i] = "MOV";  table[i] = std::bind(&InstructionSet::MOV, this, getFrontOperand(i, false), getBackOperand(i, false)); }
+	for (int i = 0110000; i < 0117777; i++) { names[i] = "MOVB"; table[i] = std::bind(&InstructionSet::MOVB, this, getFrontOperand(i, false), getBackOperand(i, false)); }
+	for (int i = 060000; i < 067777; i++)   { names[i] = "ADD";  table[i] = std::bind(&InstructionSet::ADD, this, getFrontOperand(i, false), getBackOperand(i, false)); }
+	for (int i = 0160000; i < 0167777; i++) { names[i] = "SUB";  table[i] = std::bind(&InstructionSet::SUB, this, getFrontOperand(i, false), getBackOperand(i, false)); }
+	for (int i = 077000; i < 077777; i++)   { names[i] = "SOB";	 table[i] = std::bind(&InstructionSet::SOB, this, getFrontOperandRegister(i, false), getBackOperandConstant(i, false)); }
+	for (int i = 020000; i < 027777; i++)   { names[i] = "CMP";	 table[i] = std::bind(&InstructionSet::CMP, this, getFrontOperand(i, false), getBackOperand(i, false)); }
+	for (int i = 0100; i < 0177; i++)		{ names[i] = "JMP";	 table[i] = std::bind(&InstructionSet::JMP, this, getBackOperand(i, false)); }
+	for (int i = 0400; i < 0777; i++)		{ names[i] = "BR";   table[i] = std::bind(&InstructionSet::BR, this, i); }
+	for (int i = 02000; i < 02377; i++)		{ names[i] = "BGE";	 table[i] = std::bind(&InstructionSet::BGE, this, i); }
+	for (int i = 01400; i < 01777; i++)		{ names[i] = "BEQ";	 table[i] = std::bind(&InstructionSet::BEQ, this, i); }
+	for (int i = 05200; i < 05277; i++)		{ names[i] = "INC";	 table[i] = std::bind(&InstructionSet::INC, this, getBackOperand(i, false)); }
+	for (int i = 05300; i < 05377; i++)		{ names[i] = "DEC";	 table[i] = std::bind(&InstructionSet::DEC, this, getBackOperand(i, false)); }
 
 }
 
@@ -68,7 +63,7 @@ void InstructionSet::SUB(void * src, void * dst) {
 	pdpEmulator->SetFlagN(result < 0);
 	pdpEmulator->SetFlagZ(result == 0);
 	pdpEmulator->SetFlagV((srcValue >> 15) != (dstValue >> 15) && (srcValue >> 15) == (result >> 15));
-	pdpEmulator->SetFlagC(dstValue + ~(srcValue)+1 < (1 << 16));
+	pdpEmulator->SetFlagC(dstValue + ~(srcValue) + 1 < (1 << 16));
 }
 
 void InstructionSet::SOB(void * src, void * dst) {
@@ -82,9 +77,39 @@ void InstructionSet::SOB(void * src, void * dst) {
 	// flags not affected
 }
 
+void InstructionSet::CMP(void * src, void * dst) {
+	word srcValue = pdpEmulator->GetWord(src);
+	word dstValue = pdpEmulator->GetWord(dst);
+	word result = srcValue - dstValue;
+	pdpEmulator->SetFlagN(result < 0);
+	pdpEmulator->SetFlagZ(result == 0);
+	pdpEmulator->SetFlagV((srcValue >> 15) != (dstValue >> 15) && (dstValue >> 15) == (result >> 15));
+	pdpEmulator->SetFlagC(srcValue + ~(dstValue) + 1 < (1 << 16));
+}
+
 void InstructionSet::JMP(void * dst) {
 	word dstValue = pdpEmulator->GetWord(dst);
 	pdpEmulator->SetRegisterValue(7, dstValue);
+	// flags not affected
+}
+
+void InstructionSet::BR(int instr) {
+	word offset = instr & 0377;
+	pdpEmulator->SetRegisterValue(7, pdpEmulator->GetRegisterValue(7) + 2 * offset);
+	// flags not affected
+}
+
+void InstructionSet::BGE(int instr) {
+	word offset = instr & 0377;
+	if ((pdpEmulator->GetFlagV() ^ pdpEmulator->GetFlagN()) == 0)
+		pdpEmulator->SetRegisterValue(7, pdpEmulator->GetRegisterValue(7) + 2 * offset);
+	// flags not affected
+}
+
+void InstructionSet::BEQ(int instr) {
+	word offset = instr & 0377;
+	if (pdpEmulator->GetFlagZ() == 1)
+		pdpEmulator->SetRegisterValue(7, pdpEmulator->GetRegisterValue(7) + 2 * offset);
 	// flags not affected
 }
 
