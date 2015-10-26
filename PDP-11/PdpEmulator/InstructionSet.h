@@ -4,16 +4,17 @@
 #include <functional>
 #include <assert.h>
 #include "PdpConstants.h"
-#include "PdpEmulator.h"
+
+class PdpEmulator;
 
 class InstructionSet {
 public:
 	InstructionSet(PdpEmulator * emulator);
 	~InstructionSet();
 	std::function<void()> GetInstruction(int number) { return table[number]; }
-	std::string GetInstructionString(int number);
 
 	void FreeInstruction() { assert(0); }
+
 	void MOV(int instr);
 	void MOVB(int instr);
 	void ADD(int instr);
@@ -34,10 +35,8 @@ private:
 	word * getFrontOperandRegister(word instruction, bool isByte);
 	word * getBackOperandConstant(word instruction, bool isByte);
 	word * chooseAddressByMode(word mode, word number, bool isByte);
-	std::string getOperandString(word mode, word number);
 
 	std::function<void()>	table[0177777];
-	std::string				names[0177777];
 	PdpEmulator *			pdpEmulator;
 };
 

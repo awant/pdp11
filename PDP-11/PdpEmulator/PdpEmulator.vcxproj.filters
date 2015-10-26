@@ -10,6 +10,9 @@
     <Filter Include="StuffVS">
       <UniqueIdentifier>{d4d2e1c2-19e4-474d-8353-91e2226b01d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="StuffExec">
+      <UniqueIdentifier>{c86e3315-7ed7-4c1d-bc5c-db196227b4b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -36,7 +39,12 @@
     <ClInclude Include="program.h">
       <Filter>PdpEmulator</Filter>
     </ClInclude>
-    <ClInclude Include="programOnASM.h" />
+    <ClInclude Include="Disassembler.h">
+      <Filter>PdpEmulator</Filter>
+    </ClInclude>
+    <ClInclude Include="programOnASM.h">
+      <Filter>StuffExec</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -54,6 +62,9 @@
     <ClCompile Include="InstructionSet.cpp">
       <Filter>PdpEmulator</Filter>
     </ClCompile>
+    <ClCompile Include="Disassembler.cpp">
+      <Filter>PdpEmulator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt">
@@ -62,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="image.bmp">
-      <Filter>PdpEmulator</Filter>
+      <Filter>StuffExec</Filter>
     </Image>
   </ItemGroup>
 </Project>

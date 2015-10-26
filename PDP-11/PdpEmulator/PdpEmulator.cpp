@@ -19,6 +19,14 @@ PdpEmulator::~PdpEmulator() {
 	if (instructionSet)	delete instructionSet;	 instructionSet = nullptr;
 }
 
+std::function<void()> PdpEmulator::GetInstruction(int number) {
+	return instructionSet->GetInstruction(number);
+}
+
+std::string PdpEmulator::GetInstructionString(int number) {
+	return disasm->GetInstructionString(number);
+}
+
 void PdpEmulator::loadProgram() {
 	word instr;
 	word offset = registers[7];
@@ -26,7 +34,6 @@ void PdpEmulator::loadProgram() {
 }
 
 int PdpEmulator::Check(int val) {
-	GetInstructionSet()->GetInstruction(val)();
 	return 2;
 }
 

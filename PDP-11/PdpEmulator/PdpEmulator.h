@@ -4,8 +4,8 @@
 #include <string.h>
 #include "Singleton.h"
 #include "PdpConstants.h"
-
-class InstructionSet;
+#include "Disassembler.h"
+#include "InstructionSet.h"
 
 class PdpEmulator : public Singleton<PdpEmulator> {
 public:
@@ -30,11 +30,12 @@ public:
 	void SetWordToMemory(word offset, void * value) { memcpy(memory + offset, value, sizeof(word)); }
 	byte * GetByteFromMemory(word offset) { return (memory + offset); }
 	void SetByteToMemory(word offset, void * value) { memcpy(memory + offset, value, sizeof(byte)); }
-	InstructionSet * GetInstructionSet() { return instructionSet; }
+	std::function<void()> GetInstruction(int number);
+	std::string GetInstructionString(int number);
 
 
 	int Check(int val);
-	__declspec(dllexport) wchar_t** __stdcall GetData();
+	__declspec(dllexport) wchar_t** __stdcall PdpEmulator::GetData();
 
 private:
 	bool getFlagBit(int n) { return (processorStatusWord >> n) & 1; }
@@ -42,6 +43,7 @@ private:
 	void loadProgram();
 
 	InstructionSet * instructionSet;
+	Disassembler * disasm;
 	word registers[8];
 	byte memory[0177777];
 	byte processorStatusWord; // IIITNZVC
