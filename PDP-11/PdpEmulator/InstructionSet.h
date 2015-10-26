@@ -4,8 +4,7 @@
 #include <functional>
 #include <assert.h>
 #include "PdpConstants.h"
-
-class PdpEmulator;
+#include "PdpEmulator.h"
 
 class InstructionSet {
 public:
@@ -15,31 +14,31 @@ public:
 	std::string GetInstructionString(int number);
 
 	void FreeInstruction() { assert(0); }
-
-	void MOV(void * src, void * dst);
-	void MOVB(void * src, void * dst);
-	void ADD(void * src, void * dst);
-	void SUB(void * src, void * dst);
-	void SOB(void * src, void * dst);
-	void CMP(void * src, void * dst);
-	void JMP(void * dst);
+	void MOV(int instr);
+	void MOVB(int instr);
+	void ADD(int instr);
+	void SUB(int instr);
+	void SOB(int instr);
+	void CMP(int instr);
+	void JMP(int instr);
 	void BR(int instr);
 	void BGE(int instr);
 	void BEQ(int instr);
-	void INC(void * dest);
-	void DEC(void * dest);
+	void INC(int instr);
+	void DEC(int instr);
 
 private:
-	void * getBackOperand(word instruction, bool isByte);
-	void * getFrontOperand(word instruction, bool isByte);
-	void * getBackOperandRegister(word instruction, bool isByte);
-	void * getFrontOperandRegister(word instruction, bool isByte);
-	void * getBackOperandConstant(word instruction, bool isByte);
-	void * chooseAddressByMode(word mode, word number, bool isByte);
+	word * getBackOperand(word instruction, bool isByte);
+	word * getFrontOperand(word instruction, bool isByte);
+	word * getBackOperandRegister(word instruction, bool isByte);
+	word * getFrontOperandRegister(word instruction, bool isByte);
+	word * getBackOperandConstant(word instruction, bool isByte);
+	word * chooseAddressByMode(word mode, word number, bool isByte);
 	std::string getOperandString(word mode, word number);
 
 	std::function<void()>	table[0177777];
 	std::string				names[0177777];
 	PdpEmulator *			pdpEmulator;
 };
+
 #endif // _INSTRUCTION_SET_H_

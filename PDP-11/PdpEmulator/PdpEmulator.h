@@ -26,11 +26,12 @@ public:
 	void SetRegisterValue(int number, word value) { registers[number] = value; }
 	word GetRegisterValue(int number) { return registers[number]; }
 	word * GetRegister(int number) { return &registers[number]; }
-	word GetWordFromMemory(word offset) { return *(word*)(memory + offset); }
+	word * GetWordFromMemory(word offset) { return (word*)(memory + offset); }
 	void SetWordToMemory(word offset, void * value) { memcpy(memory + offset, value, sizeof(word)); }
-	byte GetByteFromMemory(word offset) { return *(memory + offset); }
+	byte * GetByteFromMemory(word offset) { return (memory + offset); }
 	void SetByteToMemory(word offset, void * value) { memcpy(memory + offset, value, sizeof(byte)); }
 	InstructionSet * GetInstructionSet() { return instructionSet; }
+
 
 	int Check(int val);
 	__declspec(dllexport) wchar_t** __stdcall GetData();
