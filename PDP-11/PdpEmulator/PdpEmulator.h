@@ -2,6 +2,9 @@
 #define _PDP_EMULATOR_H_
 
 #include <string.h>
+#include <cstdio>
+#include <fstream>
+#include <iostream>
 #include "Singleton.h"
 #include "PdpConstants.h"
 #include "Disassembler.h"
@@ -41,7 +44,7 @@ private:
 	bool getFlagBit(int n) { return (processorStatusWord >> n) & 1; }
 	void setFlagBit(int n, bool value) { processorStatusWord = (processorStatusWord | (1 << n)) & (~((1 << n) ^ (value << n))); }
 	void loadProgram();
-
+	void initProgram();
 	InstructionSet * instructionSet;
 	Disassembler * disasm;
 	word registers[8];
