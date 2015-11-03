@@ -12,7 +12,8 @@ PdpEmulator::PdpEmulator() {
 	registers[7] = 040000;
 	processorStatusWord = 0;
 
-	loadProgram();
+	//loadProgram();
+	initProgram();
 }
 
 PdpEmulator::~PdpEmulator() {
@@ -33,30 +34,19 @@ void PdpEmulator::loadProgram() {
 	instr = 010102; memcpy(memory + offset, &instr, sizeof(word)); offset += 2;
 }
 
-unsigned char* readBMP(char* filename)
+unsigned char getByte(const char* data)
 {
-	int i;
-	FILE* f = fopen(filename, "rb");
-	unsigned char info[54];
-	fread(info, sizeof(unsigned char), 54, f); // read the 54-byte header
+	unsigned char byte = 0;
+	const char* end = data + 8;
 
-	// extract image height and width from header
-	int width = *(int*)&info[18];
-	int height = *(int*)&info[22];
-
-	int size = 3 * width * height;
-	unsigned char* data = new unsigned char[size]; // allocate 3 bytes per pixel
-	fread(data, sizeof(unsigned char), size, f); // read the rest of the data at once
-	fclose(f);
-
-	for (i = 0; i < size; i += 3)
+	for (; *data && (data < end); ++data)
 	{
-		unsigned char tmp = data[i];
-		data[i] = data[i + 2];
-		data[i + 2] = tmp;
+		byte <<= 1;
+
+		byte |= (*data == '1') ? 1 : 0;
 	}
 
-	return data;
+	return byte;
 }
 
 void PdpEmulator::initProgram() {
@@ -64,10 +54,27 @@ void PdpEmulator::initProgram() {
 	std::ifstream file("program.h", std::ios::binary | std::ios::ate);
 	std::streamsize size = file.tellg();
 	file.seekg(0, std::ios::beg);
-	if (file.read(memory, size))
+	byte data[077777];
+	if (file.read(data, size))
 	{
 		std::cout << "Read file!\n";
 	}
+	const char* array = data;
+
+	unsigned int offset = 0100000;
+	while (array - data < size)
+	{
+		unsigned char byte = getByte(array);
+		memcpy(memory + offset, &byte, 8);
+		offset += 8;
+		array += 8;
+	}
+	offset = 0100000;
+	for (int i = 0; i < 100; i++) {
+		printf("%c", *(memory+offset));
+		offset += 8;
+	}
+
 	// Read image
 	std::ifstream image("..\\PdpEmulator\\image.bmp", std::ios::binary | std::ios::ate);
 	std::streamsize sizeImage = file.tellg();
