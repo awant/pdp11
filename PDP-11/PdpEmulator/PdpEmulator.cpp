@@ -51,7 +51,7 @@ unsigned char getByte(const char* data)
 
 void PdpEmulator::initProgram() {
 	// Read program
-	std::ifstream file("program.h", std::ios::binary | std::ios::ate);
+	std::ifstream file("program.h", std::ios::ate);
 	std::streamsize size = file.tellg();
 	file.seekg(0, std::ios::beg);
 	byte data[077777];
@@ -62,11 +62,19 @@ void PdpEmulator::initProgram() {
 	const char* array = data;
 
 	unsigned int offset = 0100000;
+	int isOdd = 0;
 	while (array - data < size)
 	{
 		unsigned char byte = getByte(array);
-		memcpy(memory + offset, &byte, 8);
-		offset += 8;
+		if (isOdd) {
+			memcpy(memory + offset, &byte, 1);
+			isOdd = 0;
+			offset += 2;
+		}
+		else {
+			memcpy(memory + offset + 1, &byte, 1);
+			isOdd = 1;
+		}
 		array += 8;
 	}
 	offset = 0100000;
