@@ -2,9 +2,9 @@
 #define _PDP_EMULATOR_INTERFACE_H_
 
 #ifdef PDPEMULATOR_EXPORTS
-#define PDP_EMU_API __declspec(dllexport) 
+#define PDP_EMU_API __declspec(dllexport)
 #else
-#define PDP_EMU_API __declspec(dllimport) 
+#define PDP_EMU_API __declspec(dllimport)
 #endif
 
 extern "C"
@@ -16,6 +16,7 @@ extern "C"
 	PDP_EMU_API int* getRegisters();
 	PDP_EMU_API int* getStatusFlags();*/
 
+	PDP_EMU_API void GetVideoBuffer(char * buffer);
 	PDP_EMU_API int Check();
 }
 

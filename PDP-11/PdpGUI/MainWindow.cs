@@ -22,6 +22,8 @@ namespace PdpGUI
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void test(StringBuilder str);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void GetVideoBuffer(StringBuilder str);
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ReleaseMemory(IntPtr ptr);
 
         Dictionary<string, int> dictionary =
@@ -154,14 +156,24 @@ namespace PdpGUI
             System.Drawing.Imaging.BitmapData bmpData = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
             IntPtr ptr = bmpData.Scan0;
             int bytes = Math.Abs(bmpData.Stride) * bmpImage.Height;
-            byte[] colors = new byte[bytes];
-            System.Runtime.InteropServices.Marshal.Copy(ptr, colors, 0, bytes);
+
+            StringBuilder videoMemory = new StringBuilder(100);
+            GetVideoBuffer(videoMemory);
+            byte[] colors = Encoding.ASCII.GetBytes(videoMemory.ToString());
+            bytes = 100;
+            
+            //System.Runtime.InteropServices.Marshal.Copy(ptr, colors, 0, bytes);
+            
             // Unlock
             bmpImage.UnlockBits(bmpData);
             // Now we have string with 0 for white and 1 for black pixel - colors
             // bytes = 2048
 
             // Copy from array to image
+            bmpImage = new Bitmap(512, 256);
+            for (int i = 0; i < bmpImage.Height; i++)
+                for (int j = 0; j < bmpImage.Width; j++)
+                    bmpImage.SetPixel(j, i, Color.White);
             System.Drawing.Imaging.BitmapData bmpData2 = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
             IntPtr ptr2 = bmpData2.Scan0;
             Marshal.Copy(colors, 0, ptr2, bytes);
