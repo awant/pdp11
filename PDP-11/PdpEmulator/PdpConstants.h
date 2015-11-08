@@ -3,6 +3,7 @@
 
 typedef char byte;
 typedef short word;
+typedef unsigned short offset_t;
 
 class PdpConstants
 {
@@ -15,4 +16,5 @@ public:
 	static const byte MostNegativeByte = 0200;
 
 };
+
 #endif // _PDP_CONSTANTS_H_s

@@ -20,22 +20,25 @@ public:
 	void SetByte(void * fromPointer, void * toPointer) { memcpy(toPointer, fromPointer, sizeof(byte)); }
 	bool GetFlagC() { return getFlagBit(0); }
 	void SetFlagC(bool value) { setFlagBit(0, value); }
-	bool GetFlagV() { return getFlagBit(0); }
-	void SetFlagV(bool value) { setFlagBit(0, value); }
-	bool GetFlagZ() { return getFlagBit(0); }
-	void SetFlagZ(bool value) { setFlagBit(0, value); }
-	bool GetFlagN() { return getFlagBit(0); }
-	void SetFlagN(bool value) { setFlagBit(0, value); }
+	bool GetFlagV() { return getFlagBit(1); }
+	void SetFlagV(bool value) { setFlagBit(1, value); }
+	bool GetFlagZ() { return getFlagBit(2); }
+	void SetFlagZ(bool value) { setFlagBit(2, value); }
+	bool GetFlagN() { return getFlagBit(3); }
+	void SetFlagN(bool value) { setFlagBit(3, value); }
 	void SetRegisterValue(int number, word value) { registers[number] = value; }
 	word GetRegisterValue(int number) { return registers[number]; }
 	word * GetRegister(int number) { return &registers[number]; }
-	word * GetWordFromMemory(word offset) { return (word*)(memory + offset); }
-	void SetWordToMemory(word offset, void * value) { memcpy(memory + offset, value, sizeof(word)); }
-	byte * GetByteFromMemory(word offset) { return (memory + offset); }
-	void SetByteToMemory(word offset, void * value) { memcpy(memory + offset, value, sizeof(byte)); }
-	std::function<void()> GetInstruction(int number);
-	std::string GetInstructionString(int number);
+	word * GetWordFromMemory(offset_t offset) { return (word*)(memory + offset); }
+	void SetWordToMemory(offset_t offset, void * value) { memcpy(memory + offset, value, sizeof(word)); }
+	byte * GetByteFromMemory(offset_t offset) { return (memory + offset); }
+	void SetByteToMemory(offset_t offset, void * value) { memcpy(memory + offset, value, sizeof(byte)); }
+	std::function<void()> GetInstruction(unsigned number);
+	std::string GetInstructionString(unsigned number);
 
+	void PerformCurrentInstruction();
+	std::string GetCurrentInstruction();
+	std::string GetCurrentInstructionAndStep();
 
 	int Check(int val);
 	__declspec(dllexport) wchar_t** __stdcall PdpEmulator::GetData();
@@ -43,8 +46,9 @@ public:
 private:
 	bool getFlagBit(int n) { return (processorStatusWord >> n) & 1; }
 	void setFlagBit(int n, bool value) { processorStatusWord = (processorStatusWord | (1 << n)) & (~((1 << n) ^ (value << n))); }
-	void loadProgram();
 	void initProgram();
+	void loadProgram();
+
 	InstructionSet * instructionSet;
 	Disassembler * disasm;
 	word registers[8];

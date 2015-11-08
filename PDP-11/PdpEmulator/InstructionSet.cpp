@@ -108,12 +108,16 @@ void InstructionSet::JMP(int instr) {
 
 void InstructionSet::BR(int instr) {
 	word offset = instr & 0377;
+	if (offset >= 0200)
+		offset -= 0400;
 	pdpEmulator->SetRegisterValue(7, pdpEmulator->GetRegisterValue(7) + 2 * offset);
 	// flags not affected
 }
 
 void InstructionSet::BGE(int instr) {
 	word offset = instr & 0377;
+	if (offset >= 0200)
+		offset -= 0400;
 	if ((pdpEmulator->GetFlagV() ^ pdpEmulator->GetFlagN()) == 0)
 		pdpEmulator->SetRegisterValue(7, pdpEmulator->GetRegisterValue(7) + 2 * offset);
 	// flags not affected
@@ -121,6 +125,8 @@ void InstructionSet::BGE(int instr) {
 
 void InstructionSet::BEQ(int instr) {
 	word offset = instr & 0377;
+	if (offset >= 0200)
+		offset -= 0400;
 	if (pdpEmulator->GetFlagZ() == 1)
 		pdpEmulator->SetRegisterValue(7, pdpEmulator->GetRegisterValue(7) + 2 * offset);
 	// flags not affected

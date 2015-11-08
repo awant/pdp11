@@ -19,8 +19,9 @@ namespace PdpGUI
         //[DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         //public static extern int getIndexOfCurrentInstruction();
 
-        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("PdpEmulator.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern int Check();
+//        public static extern StringBuilder Check();
 
         Dictionary<string, int> dictionary =
 	    new Dictionary<string, int>();

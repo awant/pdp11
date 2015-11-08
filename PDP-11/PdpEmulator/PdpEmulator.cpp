@@ -1,37 +1,60 @@
 #include "stdafx.h"
+#include <bitset>
 #include "PdpEmulator.h"
 #include "PdpConstants.h"
 #include "InstructionSet.h"
 
 PdpEmulator::PdpEmulator() {
 	instructionSet = new InstructionSet(this);
+	disasm = new Disassembler;
 
 	for (int i = 0; i < 6; i++)
 		registers[i] = 0;
-	registers[6] = 020000;
-	registers[7] = 040000;
+	registers[6] = 040000;
+	registers[7] = 0100000;
 	processorStatusWord = 0;
 
-	//loadProgram();
 	initProgram();
 }
 
 PdpEmulator::~PdpEmulator() {
 	if (instructionSet)	delete instructionSet;	 instructionSet = nullptr;
+	if (disasm)			delete disasm;			 disasm = nullptr;
 }
 
-std::function<void()> PdpEmulator::GetInstruction(int number) {
+void PdpEmulator::PerformCurrentInstruction() {
+	auto num = *GetWordFromMemory(GetRegisterValue(7));
+	SetRegisterValue(7, GetRegisterValue(7) + 2);
+	GetInstruction(num)();
+}
+
+std::string PdpEmulator::GetCurrentInstruction() {
+	auto num = *GetWordFromMemory(GetRegisterValue(7));
+	std::bitset<16> x(num);
+	std::cout << x << "\n";
+	return GetInstructionString(num);
+}
+
+std::string PdpEmulator::GetCurrentInstructionAndStep() {
+	auto num = *GetWordFromMemory(GetRegisterValue(7));
+	SetRegisterValue(7, GetRegisterValue(7) + 2);
+	return GetInstructionString(num);
+}
+
+std::function<void()> PdpEmulator::GetInstruction(unsigned number) {
 	return instructionSet->GetInstruction(number);
 }
 
-std::string PdpEmulator::GetInstructionString(int number) {
+std::string PdpEmulator::GetInstructionString(unsigned number) {
 	return disasm->GetInstructionString(number);
 }
 
 void PdpEmulator::loadProgram() {
-	word instr;
-	word offset = registers[7];
-	instr = 010102; memcpy(memory + offset, &instr, sizeof(word)); offset += 2;
+	word instr, value;
+	offset_t offset = registers[7];
+	instr = 012702; memcpy(memory + offset, &instr, sizeof(word)); offset += 2;
+	value = 123;	memcpy(memory + offset, &value, sizeof(word)); offset += 2;
+	instr = 010201; memcpy(memory + offset, &instr, sizeof(word)); offset += 2;
 }
 
 unsigned char getByte(const char* data)
@@ -76,11 +99,6 @@ void PdpEmulator::initProgram() {
 			isOdd = 1;
 		}
 		array += 8;
-	}
-	offset = 0100000;
-	for (int i = 0; i < 100; i++) {
-		printf("%c", *(memory+offset));
-		offset += 8;
 	}
 
 	// Read image

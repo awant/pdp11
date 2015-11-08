@@ -11,19 +11,20 @@ Disassembler::Disassembler() {
 	for (int i = 0160000; i < 0167777; i++) { name[i] = "SUB"; numOperands[i] = 2; }
 	for (int i = 077000; i < 077777; i++)   { name[i] = "SOB"; numOperands[i] = 2; }
 	for (int i = 020000; i < 027777; i++)   { name[i] = "CMP"; numOperands[i] = 2; }
-	for (int i = 0100; i < 0177; i++)		{ name[i] = "JMP"; numOperands[i] = 1; }
-	for (int i = 0400; i < 0777; i++)		{ name[i] = "BR"; numOperands[i] = 0; }
-	for (int i = 02000; i < 02377; i++)		{ name[i] = "BGE"; numOperands[i] = 0; }
-	for (int i = 01400; i < 01777; i++)		{ name[i] = "BEQ"; numOperands[i] = 0; }
-	for (int i = 05200; i < 05277; i++)		{ name[i] = "INC"; numOperands[i] = 1; }
-	for (int i = 05300; i < 05377; i++)		{ name[i] = "DEC"; numOperands[i] = 1; }
+	for (int i = 0100; i < 0177; i++)		{ name[i] = "JMP"; numOperands[i] = 1; sizeOfOneOperand.insert(std::pair<std::string, int>(name[i], 6)); }
+	for (int i = 0400; i < 0777; i++)		{ name[i] = "BR"; numOperands[i] = 1; sizeOfOneOperand.insert(std::pair<std::string, int>(name[i], 8)); }
+	for (int i = 02000; i < 02377; i++)		{ name[i] = "BGE"; numOperands[i] = 1; sizeOfOneOperand.insert(std::pair<std::string, int>(name[i], 8)); }
+	for (int i = 01400; i < 01777; i++)		{ name[i] = "BEQ"; numOperands[i] = 1; sizeOfOneOperand.insert(std::pair<std::string, int>(name[i], 8)); }
+	for (int i = 05200; i < 05277; i++)		{ name[i] = "INC"; numOperands[i] = 1; sizeOfOneOperand.insert(std::pair<std::string, int>(name[i], 6)); }
+	for (int i = 05300; i < 05377; i++)		{ name[i] = "DEC"; numOperands[i] = 1; sizeOfOneOperand.insert(std::pair<std::string, int>(name[i], 6)); }
+
 }
 
 Disassembler::~Disassembler() {
 
 }
 
-std::string Disassembler::GetInstructionString(int number) {
+std::string Disassembler::GetInstructionString(unsigned number) {
 	std::string result = name[number] + " ";
 
 	if (numOperands[number] == 2) {
@@ -34,9 +35,24 @@ std::string Disassembler::GetInstructionString(int number) {
 		result += getOperandString(srcMode, srcReg) + ", " + getOperandString(dstMode, dstReg);
 	}
 	if (numOperands[number] == 1) {
-		word dstMode = (number >> 3) & 07;
-		word dstReg = number & 07;
-		result += getOperandString(dstMode, dstReg);
+		word dstMode, dstReg, offset;
+		int operandSize = sizeOfOneOperand.at(name[number]);
+		switch (operandSize) {
+		case 6:
+			dstMode = (number >> 3) & 07;
+			dstReg = number & 07;
+			result += getOperandString(dstMode, dstReg);
+			break;
+		case 8:
+			offset = number & 0377;
+			if (offset >= 0200)
+				offset -= 0400;
+			result += std::to_string(offset);
+			break;
+		default:
+			break;
+		}
+
 	}
 
 	return result;
