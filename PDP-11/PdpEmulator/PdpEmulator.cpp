@@ -116,9 +116,11 @@ int PdpEmulator::Check(int val) {
 	return 2;
 }
 
-__declspec(dllexport) wchar_t** __stdcall PdpEmulator::GetData() {
-	wchar_t** wct = new wchar_t*[2];
-	wct[0] = L"Awant begin";
-	wct[1] = L"Awant end";
-	return wct;
+extern "C" __declspec(dllexport) void test(char* arr)
+{
+	arr[0] = '0';
+	arr[1] = '1';
+	arr[2] = '2';
+	arr[3] = '3';
+	arr[4] = '4';
 }

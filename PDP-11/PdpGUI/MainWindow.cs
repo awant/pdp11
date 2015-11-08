@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;   // for using dll
 using System.Data.Odbc;
+using System.Diagnostics;
 
 namespace PdpGUI
 {
@@ -18,10 +19,10 @@ namespace PdpGUI
         //public static extern bool pdpReset();
         //[DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         //public static extern int getIndexOfCurrentInstruction();
-
-        [DllImport("PdpEmulator.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int Check();
-//        public static extern StringBuilder Check();
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void test(StringBuilder str);
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ReleaseMemory(IntPtr ptr);
 
         Dictionary<string, int> dictionary =
 	    new Dictionary<string, int>();
@@ -45,6 +46,10 @@ namespace PdpGUI
                 Console.WriteLine(Marshal.PtrToStringAnsi(strPtr));
                 ptr += Marshal.SizeOf(typeof(IntPtr));
             }*/
+
+            StringBuilder rntStr = new StringBuilder(4);
+            test(rntStr);
+            Debug.WriteLine(rntStr.ToString());
         }
 
         private void initProgramText()
@@ -53,8 +58,6 @@ namespace PdpGUI
             programText.Columns.Add("#", -2, HorizontalAlignment.Left);
             programText.Columns.Add("Command", -2, HorizontalAlignment.Left);
 
-            var item = new ListViewItem(new[] { "check", Check().ToString() });
-            programText.Items.Add(item);
 
             // getNumberOfCommands();
             // getCommands();
