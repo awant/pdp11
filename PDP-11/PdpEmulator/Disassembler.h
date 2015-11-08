@@ -5,11 +5,13 @@
 #include <map>
 #include "PdpConstants.h"
 
+class PdpEmulator;
+
 class Disassembler {
 public:
-	Disassembler();
+	Disassembler(PdpEmulator * emulator);
 	~Disassembler();
-	std::string GetInstructionString(unsigned number);
+	std::string GetInstructionString(unsigned number, offset_t pc);
 
 private:
 	std::string getOperandString(word mode, word number);
@@ -17,6 +19,7 @@ private:
 	std::string					name[0177777];
 	int							numOperands[0177777];
 	std::map<std::string, int>	sizeOfOneOperand;
+	PdpEmulator *				pdpEmulator;
 };
 
 #endif // _DISASSEMBLER_H_

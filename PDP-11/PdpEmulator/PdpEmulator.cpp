@@ -6,7 +6,7 @@
 
 PdpEmulator::PdpEmulator() {
 	instructionSet = new InstructionSet(this);
-	disasm = new Disassembler;
+	disasm = new Disassembler(this);
 
 	for (int i = 0; i < 6; i++)
 		registers[i] = 0;
@@ -23,30 +23,30 @@ PdpEmulator::~PdpEmulator() {
 }
 
 void PdpEmulator::PerformCurrentInstruction() {
-	auto num = *GetWordFromMemory(GetRegisterValue(7));
+	word num = *GetWordFromMemory(GetRegisterValue(7));
 	SetRegisterValue(7, GetRegisterValue(7) + 2);
 	GetInstruction(num)();
 }
 
 std::string PdpEmulator::GetCurrentInstruction() {
-	auto num = *GetWordFromMemory(GetRegisterValue(7));
-	std::bitset<16> x(num);
-	std::cout << x << "\n";
-	return GetInstructionString(num);
+	offset_t pc = GetRegisterValue(7);
+	word num = *GetWordFromMemory(pc);
+	return GetInstructionString(num, pc);
 }
 
 std::string PdpEmulator::GetCurrentInstructionAndStep() {
-	auto num = *GetWordFromMemory(GetRegisterValue(7));
-	SetRegisterValue(7, GetRegisterValue(7) + 2);
-	return GetInstructionString(num);
+	offset_t pc = GetRegisterValue(7);
+	word num = *GetWordFromMemory(pc);
+	SetRegisterValue(7, pc + 2);
+	return GetInstructionString(num, pc);
 }
 
 std::function<void()> PdpEmulator::GetInstruction(unsigned number) {
 	return instructionSet->GetInstruction(number);
 }
 
-std::string PdpEmulator::GetInstructionString(unsigned number) {
-	return disasm->GetInstructionString(number);
+std::string PdpEmulator::GetInstructionString(unsigned number, offset_t pc) {
+	return disasm->GetInstructionString(number, pc);
 }
 
 void PdpEmulator::loadProgram() {

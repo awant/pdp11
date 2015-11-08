@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "Disassembler.h"
 #include "PdpConstants.h"
+#include "PdpEmulator.h"
 
-Disassembler::Disassembler() {
+Disassembler::Disassembler(PdpEmulator * emulator) {
+	pdpEmulator = emulator;
+
 	for (int i = 0; i < 0177777; i++)		{ name[i] = "NULL"; numOperands[i] = 0; }
 
 	for (int i = 010000; i < 017777; i++)   { name[i] = "MOV"; numOperands[i] = 2; }
@@ -24,7 +27,7 @@ Disassembler::~Disassembler() {
 
 }
 
-std::string Disassembler::GetInstructionString(unsigned number) {
+std::string Disassembler::GetInstructionString(unsigned number, offset_t pc) {
 	std::string result = name[number] + " ";
 
 	if (numOperands[number] == 2) {
@@ -32,7 +35,15 @@ std::string Disassembler::GetInstructionString(unsigned number) {
 		word srcReg = (number >> 6) & 07;
 		word dstMode = (number >> 3) & 07;
 		word dstReg = number & 07;
-		result += getOperandString(srcMode, srcReg) + ", " + getOperandString(dstMode, dstReg);
+		// looking for constants from memory
+		if (srcMode == 2 && srcReg == 7)
+			result += "#" + std::to_string(long long(*pdpEmulator->GetWordFromMemory(pc + 2)));
+		else
+			result += getOperandString(srcMode, srcReg);
+		if (dstMode == 2 && dstReg == 7)
+			result += ", #" + std::to_string(long long(*pdpEmulator->GetWordFromMemory(pc + 2)));
+		else
+			result += ", " + getOperandString(dstMode, dstReg);
 	}
 	if (numOperands[number] == 1) {
 		word dstMode, dstReg, offset;
@@ -52,7 +63,6 @@ std::string Disassembler::GetInstructionString(unsigned number) {
 		default:
 			break;
 		}
-
 	}
 
 	return result;
