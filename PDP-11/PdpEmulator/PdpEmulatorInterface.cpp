@@ -24,8 +24,9 @@ void GetVideoBuffer(char * buffer)
 	offset_t sizeOfVideoBuffer = 0100000 - 040000;
 	memcpy(buffer, PdpEmulator::I().GetByteFromMemory(startOfVideoBuffer), sizeOfVideoBuffer);*/
 
-	int n = 100;
+	int n = 512 * 256;
 	while (n-- > 0) {
-		buffer[n] = (1 << 8) - 1;
+		int x = int(float(rand()) / 32767 * 7) + 1;
+		buffer[n] = (1 << x) - 1;
 	}
 }

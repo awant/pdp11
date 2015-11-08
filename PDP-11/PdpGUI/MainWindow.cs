@@ -10,6 +10,10 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;   // for using dll
 using System.Data.Odbc;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Windows.Forms;
 
 namespace PdpGUI
 {
@@ -157,10 +161,10 @@ namespace PdpGUI
             IntPtr ptr = bmpData.Scan0;
             int bytes = Math.Abs(bmpData.Stride) * bmpImage.Height;
 
-            StringBuilder videoMemory = new StringBuilder(100);
+            StringBuilder videoMemory = new StringBuilder(512 * 256);
             GetVideoBuffer(videoMemory);
             byte[] colors = Encoding.ASCII.GetBytes(videoMemory.ToString());
-            bytes = 100;
+            bytes = 512 * 256;
             
             //System.Runtime.InteropServices.Marshal.Copy(ptr, colors, 0, bytes);
             
@@ -170,10 +174,7 @@ namespace PdpGUI
             // bytes = 2048
 
             // Copy from array to image
-            bmpImage = new Bitmap(512, 256);
-            for (int i = 0; i < bmpImage.Height; i++)
-                for (int j = 0; j < bmpImage.Width; j++)
-                    bmpImage.SetPixel(j, i, Color.White);
+            bmpImage = new Bitmap(512, 256, PixelFormat.Format8bppIndexed);
             System.Drawing.Imaging.BitmapData bmpData2 = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
             IntPtr ptr2 = bmpData2.Scan0;
             Marshal.Copy(colors, 0, ptr2, bytes);
