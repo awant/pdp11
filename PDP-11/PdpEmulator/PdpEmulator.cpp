@@ -10,7 +10,7 @@ PdpEmulator::PdpEmulator() {
 
 	for (int i = 0; i < 6; i++)
 		registers[i] = 0;
-	registers[6] = 040000;
+	registers[6] = 037777;
 	registers[7] = 0100000;
 	processorStatusWord = 0;
 
@@ -103,7 +103,7 @@ void PdpEmulator::initProgram() {
 
 	// Read image
 	std::ifstream image("..\\PdpEmulator\\image.bmp", std::ios::binary | std::ios::ate);
-	std::streamsize sizeImage = file.tellg();
+	std::streamsize sizeImage = image.tellg();
 	image.seekg(54, std::ios::beg);
 
 	if (image.read(memory + 0110000, sizeImage))

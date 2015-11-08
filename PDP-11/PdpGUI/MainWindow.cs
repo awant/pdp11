@@ -161,10 +161,11 @@ namespace PdpGUI
             IntPtr ptr = bmpData.Scan0;
             int bytes = Math.Abs(bmpData.Stride) * bmpImage.Height;
 
-            StringBuilder videoMemory = new StringBuilder(512 * 256);
+            StringBuilder videoMemory = new StringBuilder(512 * 256 / 64);
             GetVideoBuffer(videoMemory);
-            byte[] colors = Encoding.ASCII.GetBytes(videoMemory.ToString());
-            bytes = 512 * 256;
+
+            byte[] colors = Encoding.ASCII.GetBytes(videoMemory.ToString(0, 512 * 256 / 64));
+            bytes = 512 * 256 / 64;
             
             //System.Runtime.InteropServices.Marshal.Copy(ptr, colors, 0, bytes);
             
@@ -174,7 +175,7 @@ namespace PdpGUI
             // bytes = 2048
 
             // Copy from array to image
-            bmpImage = new Bitmap(512, 256, PixelFormat.Format8bppIndexed);
+            bmpImage = new Bitmap(512, 256, PixelFormat.Format1bppIndexed);
             System.Drawing.Imaging.BitmapData bmpData2 = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
             IntPtr ptr2 = bmpData2.Scan0;
             Marshal.Copy(colors, 0, ptr2, bytes);
