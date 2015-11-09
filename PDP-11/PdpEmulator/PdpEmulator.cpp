@@ -74,7 +74,7 @@ unsigned char getByte(const char* data)
 
 void PdpEmulator::initProgram() {
 	// Read program
-	std::ifstream file("program.h", std::ios::ate);
+	std::ifstream file("..\\PdpEmulator\\program.h", std::ios::ate);
 	std::streamsize size = file.tellg();
 	file.seekg(0, std::ios::beg);
 	byte data[077777];
