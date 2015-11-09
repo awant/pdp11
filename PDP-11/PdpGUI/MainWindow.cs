@@ -161,11 +161,13 @@ namespace PdpGUI
             IntPtr ptr = bmpData.Scan0;
             int bytes = Math.Abs(bmpData.Stride) * bmpImage.Height;
 
-            StringBuilder videoMemory = new StringBuilder(512 * 256 / 64);
+            StringBuilder videoMemory = new StringBuilder(512 * 256 / 8);
             GetVideoBuffer(videoMemory);
-
-            byte[] colors = Encoding.ASCII.GetBytes(videoMemory.ToString(0, 512 * 256 / 64));
-            bytes = 512 * 256 / 64;
+            //char[] buffer = new char[512 * 256 / 8];
+            //videoMemory.CopyTo(0, buffer, 0, 512 * 256 / 8);
+            //Console.WriteLine(buffer);
+            byte[] colors = Encoding.ASCII.GetBytes(videoMemory.ToString());
+            bytes = 512 * 256 / 8;
             
             //System.Runtime.InteropServices.Marshal.Copy(ptr, colors, 0, bytes);
             
