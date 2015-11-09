@@ -25,8 +25,10 @@ namespace PdpGUI
         //public static extern int getIndexOfCurrentInstruction();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void test(StringBuilder str);
+        //[DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        //public static extern void GetVideoBuffer(StringBuilder str);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void GetVideoBuffer(StringBuilder str);
+        public static extern void GetVideoBuffer(IntPtr str);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ReleaseMemory(IntPtr ptr);
 
@@ -148,39 +150,22 @@ namespace PdpGUI
 
 
         //----------------------------------------------------------------------------
-        //PictureBox pictureBox1 = new PictureBox();
         public void CreateBitmapAtRuntime()
         {
             this.Controls.Add(Display);
 
-
-            Bitmap bmpImage = new Bitmap("..\\PdpEmulator\\image.bmp");
-            // Lock the bitmap's bits.  
-            Rectangle rect = new Rectangle(0, 0, bmpImage.Width, bmpImage.Height);
-            System.Drawing.Imaging.BitmapData bmpData = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
-            IntPtr ptr = bmpData.Scan0;
-            int bytes = Math.Abs(bmpData.Stride) * bmpImage.Height;
-
-            StringBuilder videoMemory = new StringBuilder(512 * 256 / 8);
+            IntPtr videoMemory = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * 512 * 256 / 8);
             GetVideoBuffer(videoMemory);
-            //char[] buffer = new char[512 * 256 / 8];
-            //videoMemory.CopyTo(0, buffer, 0, 512 * 256 / 8);
-            //Console.WriteLine(buffer);
-            byte[] colors = Encoding.ASCII.GetBytes(videoMemory.ToString());
-            bytes = 512 * 256 / 8;
-            
-            //System.Runtime.InteropServices.Marshal.Copy(ptr, colors, 0, bytes);
-            
-            // Unlock
-            bmpImage.UnlockBits(bmpData);
-            // Now we have string with 0 for white and 1 for black pixel - colors
-            // bytes = 2048
+            int bytes = 512 * 256 / 8;
 
-            // Copy from array to image
-            bmpImage = new Bitmap(512, 256, PixelFormat.Format1bppIndexed);
+            byte[] managedArray = new byte[bytes];
+            Marshal.Copy(videoMemory, managedArray, 0, bytes);
+            Bitmap bmpImage = new Bitmap(512, 256, PixelFormat.Format1bppIndexed);
+            Rectangle rect = new Rectangle(0, 0, 512, 256);
             System.Drawing.Imaging.BitmapData bmpData2 = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
             IntPtr ptr2 = bmpData2.Scan0;
-            Marshal.Copy(colors, 0, ptr2, bytes);
+            Marshal.Copy(managedArray, 0, ptr2, bytes);
+
             bmpImage.UnlockBits(bmpData2);
 
             Display.Image = bmpImage;
