@@ -17,6 +17,7 @@ extern "C"
 	PDP_EMU_API int* getStatusFlags();*/
 
 	PDP_EMU_API void GetVideoBuffer(char * buffer);
+	PDP_EMU_API void GetCurrentInstruction(char * buffer);
 	PDP_EMU_API int Check();
 }
 
