@@ -18,6 +18,7 @@ public:
 	void SetWord(void * fromPointer, void * toPointer) { memcpy(toPointer, fromPointer, sizeof(word)); }
 	byte GetByte(void * pointer) { return *(byte*)pointer; }
 	void SetByte(void * fromPointer, void * toPointer) { memcpy(toPointer, fromPointer, sizeof(byte)); }
+	byte GetFlagsByte() { return processorStatusWord; }
 	bool GetFlagC() { return getFlagBit(0); }
 	void SetFlagC(bool value) { setFlagBit(0, value); }
 	bool GetFlagV() { return getFlagBit(1); }
