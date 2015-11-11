@@ -48,7 +48,6 @@ namespace PdpGUI
         {
             InitializeComponent();
             initInterface();
-            //initProgramText();
             CreateBitmapAtRuntime();
 
 
@@ -176,27 +175,21 @@ namespace PdpGUI
             a = 0;
         }
 
-        //----------------------------------------------------------------------------
         public void CreateBitmapAtRuntime()
         {
             this.Controls.Add(Display);
-
             IntPtr videoMemory = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * 512 * 256 / 8);
             GetVideoBuffer(videoMemory);
             int bytes = 512 * 256 / 8;
-
             byte[] managedArray = new byte[bytes];
             Marshal.Copy(videoMemory, managedArray, 0, bytes);
             Bitmap bmpImage = new Bitmap(512, 256, PixelFormat.Format1bppIndexed);
             Rectangle rect = new Rectangle(0, 0, 512, 256);
-            System.Drawing.Imaging.BitmapData bmpData2 = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
-            IntPtr ptr2 = bmpData2.Scan0;
+            System.Drawing.Imaging.BitmapData bmpData = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
+            IntPtr ptr2 = bmpData.Scan0;
             Marshal.Copy(managedArray, 0, ptr2, bytes);
-
-            bmpImage.UnlockBits(bmpData2);
-
+            bmpImage.UnlockBits(bmpData);
             Display.Image = bmpImage;
         }
-        //----------------------------------------------------------------------------
     }
 }
