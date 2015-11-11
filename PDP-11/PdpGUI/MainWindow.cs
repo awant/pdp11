@@ -41,6 +41,7 @@ namespace PdpGUI
         public MainWindow()
         {
             InitializeComponent();
+            initInterface();
             initProgramText();
             initProcInfo();
             CreateBitmapAtRuntime();
@@ -60,13 +61,20 @@ namespace PdpGUI
             Debug.WriteLine(rntStr.ToString());
         }
 
-        private void initProgramText()
+        private void initInterface()
         {
+            // ProgramText
             programText.View = View.Details;
             programText.Columns.Add("#", -2, HorizontalAlignment.Left);
             programText.Columns.Add("Command", -2, HorizontalAlignment.Left);
+            // Proc
+            procInfo.View = View.Details;
+            procInfo.Columns.Add("Registers", 284, HorizontalAlignment.Left);
+            procInfo.Columns.Add("Flags", 284, HorizontalAlignment.Left);
+        }
 
-
+        private void initProgramText()
+        {
             // getNumberOfCommands();
             // getCommands();
            /* for (int i = 0; i < 300; i++)
@@ -78,14 +86,13 @@ namespace PdpGUI
 
         private void initProcInfo()
         {
-            procInfo.View = View.Details;
-            procInfo.Columns.Add("Registers", 284, HorizontalAlignment.Left);
-            procInfo.Columns.Add("Flags", 284, HorizontalAlignment.Left);
+
             // getRegisters: (R0: 2) - for example
             // getFlags: (OF: True) - for example
+            string register
             for (int i = 0; i < 8; i++)
             {
-                var item = new ListViewItem(new[] { "some register", "some flag" });
+                var item = new ListViewItem(new[] { "R" + i.ToString() + " " +, "some flag" });
                 procInfo.Items.Add(item);
             }
         }
