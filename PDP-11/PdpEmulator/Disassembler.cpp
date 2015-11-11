@@ -27,7 +27,7 @@ Disassembler::~Disassembler() {
 
 }
 
-std::string Disassembler::GetInstructionString(unsigned number, offset_t pc) {
+std::string Disassembler::GetInstructionString(uword number, offset_t pc) {
 	std::string result = name[number] + " ";
 
 	if (numOperands[number] == 2) {

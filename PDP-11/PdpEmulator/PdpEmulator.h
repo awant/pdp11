@@ -34,8 +34,8 @@ public:
 	void SetWordToMemory(offset_t offset, void * value) { memcpy(memory + offset, value, sizeof(word)); }
 	byte * GetByteFromMemory(offset_t offset) { return (memory + offset); }
 	void SetByteToMemory(offset_t offset, void * value) { memcpy(memory + offset, value, sizeof(byte)); }
-	std::function<void()> GetInstruction(unsigned number);
-	std::string GetInstructionString(unsigned number, offset_t pc);
+	std::function<void()> GetInstruction(uword number);
+	std::string GetInstructionString(uword number, offset_t pc);
 
 	void PerformCurrentInstruction();
 	std::string GetCurrentInstruction();

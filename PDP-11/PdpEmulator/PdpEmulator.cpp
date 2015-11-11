@@ -41,11 +41,11 @@ std::string PdpEmulator::GetCurrentInstructionAndStep() {
 	return GetInstructionString(num, pc);
 }
 
-std::function<void()> PdpEmulator::GetInstruction(unsigned number) {
+std::function<void()> PdpEmulator::GetInstruction(uword number) {
 	return instructionSet->GetInstruction(number);
 }
 
-std::string PdpEmulator::GetInstructionString(unsigned number, offset_t pc) {
+std::string PdpEmulator::GetInstructionString(uword number, offset_t pc) {
 	return disasm->GetInstructionString(number, pc);
 }
 
