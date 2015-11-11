@@ -32,13 +32,15 @@ namespace PdpGUI
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ReleaseMemory(IntPtr ptr);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int GetRegisters(IntPtr ptr);
+        public static extern void GetRegisters(IntPtr ptr);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr GetData();
+        public static extern byte GetFlags();
+        //[DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        //public static extern IntPtr GetData();
 
 
-        IntPtr valueOfRegister;
-        Int16 valueOfFlag;
+        IntPtr valueOfRegisters = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Int32)) * 8);
+        byte valueOfFlag;
 
         public MainWindow()
         {
@@ -78,7 +80,9 @@ namespace PdpGUI
 
         private void doStep()
         {
-            fillProgramText();
+            GetRegisters(valueOfRegisters);
+            valueOfFlag = GetFlags();
+            //fillProgramText();
             fillProcInfo();
         }
 
@@ -95,17 +99,20 @@ namespace PdpGUI
 
         private void fillProcInfo()
         {
-
-            // getRegisters: (R0: 2) - for example
-            // getFlags: (OF: True) - for example
-            // IIITNZVC
+            for (int i = procInfo.Items.Count - 1; i >= 0; i--)
+            {
+                procInfo.Items[i].Remove();
+            }
             string[] flagNames = {"", "", "", "", "N", "Z", "V", "C"};
             string register, flag;
-
+            Int32[] valueOfRegistersInInts = new Int32[8];
+            Marshal.Copy(valueOfRegisters, valueOfRegistersInInts, 0, 8);
             for (int i = 0; i < 8; i++)
             {
-                register = "R" + i.ToString() + " = " + "";
+                register = "R" + i.ToString() + " = " + ((UInt16)valueOfRegistersInInts[i]).ToString();
                 flag = flagNames[i];
+                if  (i >= 4)
+                    flag += " = " + ((valueOfFlag >> (8 - i)) & 1);
                 var item = new ListViewItem(new[] { register, flag });
                 procInfo.Items.Add(item);
             }
@@ -139,10 +146,13 @@ namespace PdpGUI
         // This is the main loop
         private void step()
         {
+            //readNextInstruction();
+            /*
             int i = getIndexOfCurrentInstruction();
             programText.Select();
             programText.Items[i].Selected = true;
-            programText.EnsureVisible(i);
+            programText.EnsureVisible(i); */
+            doStep();
         }
 
         private void programText_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
