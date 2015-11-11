@@ -4,6 +4,7 @@
 typedef char byte;
 typedef short word;
 typedef unsigned short offset_t;
+typedef unsigned short uword;
 
 class PdpConstants
 {

@@ -11,7 +11,7 @@ class Disassembler {
 public:
 	Disassembler(PdpEmulator * emulator);
 	~Disassembler();
-	std::string GetInstructionString(unsigned number, offset_t pc);
+	std::string GetInstructionString(uword number, offset_t pc);
 
 private:
 	std::string getOperandString(word mode, word number);

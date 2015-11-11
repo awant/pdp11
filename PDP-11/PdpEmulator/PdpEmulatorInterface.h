@@ -7,6 +7,8 @@
 #define PDP_EMU_API __declspec(dllimport)
 #endif
 
+#include "PdpConstants.h"
+
 extern "C"
 {
 	/*PDP_EMU_API BOOL pdpInitializer();
@@ -17,7 +19,7 @@ extern "C"
 	PDP_EMU_API void GetVideoBuffer(char * buffer);
 	PDP_EMU_API void GetCurrentInstruction(char * buffer);
 	PDP_EMU_API void GetRegisters(int * buffer);
-	PDP_EMU_API int GetFlags();
+	PDP_EMU_API byte GetFlags();
 }
 
 #endif // _PDP_EMULATOR_INTERFACE_H_
