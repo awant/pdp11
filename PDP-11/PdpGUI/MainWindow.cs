@@ -31,16 +31,22 @@ namespace PdpGUI
         public static extern void GetVideoBuffer(IntPtr str);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ReleaseMemory(IntPtr ptr);
+
+
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void GetRegisters(IntPtr ptr);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern byte GetFlags();
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern byte GetCurrentInstruction(StringBuilder ptr);
         //[DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         //public static extern IntPtr GetData();
 
-
+        // Global State
         IntPtr valueOfRegisters = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Int32)) * 8);
         byte valueOfFlag;
+        StringBuilder currentInstruction = new StringBuilder(60);
+        static int InstrNumber = 0;
 
         public MainWindow()
         {
@@ -80,9 +86,10 @@ namespace PdpGUI
 
         private void doStep()
         {
+            GetCurrentInstruction(currentInstruction);
             GetRegisters(valueOfRegisters);
             valueOfFlag = GetFlags();
-            //fillProgramText();
+            fillProgramText();
             fillProcInfo();
         }
 
@@ -90,11 +97,9 @@ namespace PdpGUI
         {
             // getNumberOfCommands();
             // getCommands();
-           /* for (int i = 0; i < 300; i++)
-            {
-                var item = new ListViewItem(new[] { "line number", "command" });
-                programText.Items.Add(item);
-            }*/
+            var item = new ListViewItem(new[] { InstrNumber.ToString(), currentInstruction.ToString() });
+            programText.Items.Add(item);
+            InstrNumber++;
         }
 
         private void fillProcInfo()
@@ -178,7 +183,6 @@ namespace PdpGUI
         {
             a = 0;
         }
-
 
         //----------------------------------------------------------------------------
         public void CreateBitmapAtRuntime()
