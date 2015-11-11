@@ -89,10 +89,15 @@ namespace PdpGUI
 
             // getRegisters: (R0: 2) - for example
             // getFlags: (OF: True) - for example
-            string register
+            // IIITNZVC
+            string[] flagNames = {"", "", "", "", "N", "Z", "V", "C"};
+            string register, flag;
+            StringBuilder valueOfRegister;
             for (int i = 0; i < 8; i++)
             {
-                var item = new ListViewItem(new[] { "R" + i.ToString() + " " +, "some flag" });
+                register = "R" + i.ToString() + " = " + "";
+                flag = flagNames[i];
+                var item = new ListViewItem(new[] { register, flag });
                 procInfo.Items.Add(item);
             }
         }
