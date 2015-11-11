@@ -31,20 +31,23 @@ namespace PdpGUI
         public static extern void GetVideoBuffer(IntPtr str);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ReleaseMemory(IntPtr ptr);
-
-        Dictionary<string, int> dictionary =
-	    new Dictionary<string, int>();
-
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int GetRegisters(IntPtr ptr);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr GetData();
+
+
+        IntPtr valueOfRegister;
+        Int16 valueOfFlag;
 
         public MainWindow()
         {
             InitializeComponent();
             initInterface();
-            initProgramText();
-            initProcInfo();
+            //initProgramText();
             CreateBitmapAtRuntime();
+
+
             // Check getting data
             /*IntPtr ptr = GetData();
             IntPtr strPtr;
@@ -73,7 +76,13 @@ namespace PdpGUI
             procInfo.Columns.Add("Flags", 284, HorizontalAlignment.Left);
         }
 
-        private void initProgramText()
+        private void doStep()
+        {
+            fillProgramText();
+            fillProcInfo();
+        }
+
+        private void fillProgramText()
         {
             // getNumberOfCommands();
             // getCommands();
@@ -84,7 +93,7 @@ namespace PdpGUI
             }*/
         }
 
-        private void initProcInfo()
+        private void fillProcInfo()
         {
 
             // getRegisters: (R0: 2) - for example
@@ -92,7 +101,7 @@ namespace PdpGUI
             // IIITNZVC
             string[] flagNames = {"", "", "", "", "N", "Z", "V", "C"};
             string register, flag;
-            StringBuilder valueOfRegister;
+
             for (int i = 0; i < 8; i++)
             {
                 register = "R" + i.ToString() + " = " + "";
