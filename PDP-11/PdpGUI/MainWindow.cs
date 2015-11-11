@@ -24,10 +24,6 @@ namespace PdpGUI
         //[DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         //public static extern int getIndexOfCurrentInstruction();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void test(StringBuilder str);
-        //[DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        //public static extern void GetVideoBuffer(StringBuilder str);
-        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void GetVideoBuffer(IntPtr str);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ReleaseMemory(IntPtr ptr);
@@ -67,9 +63,6 @@ namespace PdpGUI
                 ptr += Marshal.SizeOf(typeof(IntPtr));
             }*/
 
-            StringBuilder rntStr = new StringBuilder(4);
-            test(rntStr);
-            Debug.WriteLine(rntStr.ToString());
         }
 
         private void initInterface()
@@ -96,7 +89,6 @@ namespace PdpGUI
         private void fillProgramText()
         {
             // getNumberOfCommands();
-            // getCommands();
             var item = new ListViewItem(new[] { InstrNumber.ToString(), currentInstruction.ToString() });
             programText.Items.Add(item);
             InstrNumber++;
