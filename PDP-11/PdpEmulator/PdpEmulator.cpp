@@ -57,6 +57,7 @@ void PdpEmulator::loadProgram() {
 	instr = 010201; memcpy(memory + offset, &instr, sizeof(word)); offset += 2;
 }
 
+// image loading by Roman
 unsigned char getByte(const char* data)
 {
 	unsigned char byte = 0;
@@ -105,22 +106,8 @@ void PdpEmulator::initProgram() {
 	std::ifstream image("..\\PdpEmulator\\image.bmp", std::ios::binary | std::ios::ate);
 	std::streamsize sizeImage = image.tellg();
 	image.seekg(0, std::ios::beg);
-
 	if (image.read(memory + 0110000, sizeImage))
 	{
 		std::cout << "Read image!\n";
 	}
-}
-
-int PdpEmulator::Check(int val) {
-	return 2;
-}
-
-extern "C" __declspec(dllexport) void test(char* arr)
-{
-	arr[0] = '0';
-	arr[1] = '1';
-	arr[2] = '2';
-	arr[3] = '3';
-	arr[4] = '4';
 }

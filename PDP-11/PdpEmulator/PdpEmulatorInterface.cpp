@@ -17,9 +17,7 @@ void GetVideoBuffer(char * buffer)
 		emu->PerformCurrentInstruction();
 		num++;
 	}
-	//memcpy(buffer, emu->GetByteFromMemory(startOfVideoBuffer), sizeOfVideoBuffer);
-	for (int i = 0; i < sizeOfVideoBuffer; i++)
-		buffer[i] = *emu->GetByteFromMemory(startOfVideoBuffer+i);
+	memcpy(buffer, emu->GetByteFromMemory(startOfVideoBuffer), sizeOfVideoBuffer);
 }
 
 void GetCurrentInstruction(char * buffer)

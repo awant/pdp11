@@ -41,9 +41,6 @@ public:
 	std::string GetCurrentInstruction();
 	std::string GetCurrentInstructionAndStep();
 
-	int Check(int val);
-	__declspec(dllexport) wchar_t** __stdcall PdpEmulator::GetData();
-
 private:
 	bool getFlagBit(int n) { return (processorStatusWord >> n) & 1; }
 	void setFlagBit(int n, bool value) { processorStatusWord = (processorStatusWord | (1 << n)) & (~((1 << n) ^ (value << n))); }
@@ -54,7 +51,7 @@ private:
 	Disassembler * disasm;
 	word registers[8];
 	byte memory[0177777];
-	byte processorStatusWord; // IIITNZVC
+	byte processorStatusWord; // IIITNZVC <- flags
 };
 
 #endif // _PDP_EMULATOR_H_
