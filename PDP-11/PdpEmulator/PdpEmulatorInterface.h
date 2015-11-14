@@ -11,11 +11,7 @@
 
 extern "C"
 {
-	/*PDP_EMU_API BOOL pdpInitializer();
-
-	PDP_EMU_API char** getAllInstructions();
-	PDP_EMU_API int getIndexOfCurrentInstruction();*/
-
+	PDP_EMU_API void PerformStep();
 	PDP_EMU_API void GetVideoBuffer(char * buffer);
 	PDP_EMU_API void GetCurrentInstruction(char * buffer);
 	PDP_EMU_API void GetRegisters(int * buffer);

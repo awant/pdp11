@@ -43,3 +43,9 @@ byte GetFlags()
 	auto emu = PdpEmulator::IPtr();
 	return emu->GetFlagsByte();
 }
+
+void PerformStep()
+{
+	auto emu = PdpEmulator::IPtr();
+	emu->PerformCurrentInstruction();
+}
