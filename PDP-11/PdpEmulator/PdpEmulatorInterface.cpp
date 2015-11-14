@@ -11,7 +11,6 @@ void GetVideoBuffer(char * buffer)
 	auto emu = PdpEmulator::IPtr();
 	int num = 0;
 	while (1) {
-		//std::cout << emu->GetCurrentInstruction() << "\n";
 		word instr = *emu->GetWordFromMemory(emu->GetRegisterValue(7));
 		if (instr == 0)
 			break;

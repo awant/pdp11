@@ -104,8 +104,7 @@ void PdpEmulator::initProgram() {
 	// Read image
 	std::ifstream image("..\\PdpEmulator\\image.bmp", std::ios::binary | std::ios::ate);
 	std::streamsize sizeImage = image.tellg();
-	sizeImage -= 62;
-	image.seekg(62, std::ios::beg);
+	image.seekg(0, std::ios::beg);
 
 	if (image.read(memory + 0110000, sizeImage))
 	{
