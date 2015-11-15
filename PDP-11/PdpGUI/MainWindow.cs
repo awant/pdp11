@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;   // for using dll
+using System.Runtime.InteropServices;
 using System.Data.Odbc;
 using System.Diagnostics;
 using System.Drawing;
@@ -19,32 +19,27 @@ namespace PdpGUI
 {
     public partial class MainWindow : Form
     {
-        //[DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        //public static extern bool pdpReset();
-        //[DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        //public static extern int getIndexOfCurrentInstruction();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void GetVideoBuffer(IntPtr str);
-        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void PerformProgram();
-        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ReleaseMemory(IntPtr ptr);
-
-
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void GetRegisters(IntPtr ptr);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern byte GetFlags();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern byte GetCurrentInstruction(StringBuilder ptr);
-        //[DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        //public static extern IntPtr GetData();
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int GetInstructionNumber();
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void GetAllInstructions(IntPtr pInstructions);
+
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void Test(IntPtr pTest);
 
         // Global State
         IntPtr valueOfRegisters = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Int32)) * 8);
         byte valueOfFlag;
         StringBuilder currentInstruction = new StringBuilder(60);
-        static int InstrNumber = 0;
+        int currentInstructionNumber = 0;
 
         public MainWindow()
         {
@@ -72,6 +67,7 @@ namespace PdpGUI
             programText.View = View.Details;
             programText.Columns.Add("#", -2, HorizontalAlignment.Left);
             programText.Columns.Add("Command", -2, HorizontalAlignment.Left);
+            fillProgramText();
             // Proc
             procInfo.View = View.Details;
             procInfo.Columns.Add("Registers", 284, HorizontalAlignment.Left);
@@ -81,18 +77,34 @@ namespace PdpGUI
         private void doStep()
         {
             GetCurrentInstruction(currentInstruction);
+            addNextInstructionInProgramText();
             GetRegisters(valueOfRegisters);
             valueOfFlag = GetFlags();
-            fillProgramText();
             fillProcInfo();
+        }
+
+        private void addNextInstructionInProgramText()
+        {
+            var item = new ListViewItem(new[] { currentInstructionNumber.ToString(), currentInstruction.ToString() });
+            programText.Items.Add(item);
+            programText.Select();
+            programText.Items[currentInstructionNumber].Selected = true;
+            programText.EnsureVisible(currentInstructionNumber++);
+
         }
 
         private void fillProgramText()
         {
-            // getNumberOfCommands();
-            var item = new ListViewItem(new[] { InstrNumber.ToString(), currentInstruction.ToString() });
-            programText.Items.Add(item);
-            InstrNumber++;
+            int numberOfInstruction = GetInstructionNumber();
+
+            for (int i = 0; i < numberOfInstruction; i++)
+            {
+                //string str = Marshal.PtrToStringAnsi(pIntPtrArray[i]);
+                //Marshal.FreeCoTaskMem(pIntPtrArray[i]);
+                //Console.WriteLine(instructions[i]);
+                //var item = new ListViewItem(new[] { i.ToString(), str });
+                //programText.Items.Add(item);
+            }
         }
 
         private void fillProcInfo()
@@ -144,12 +156,6 @@ namespace PdpGUI
         // This is the main loop
         private void step()
         {
-            //readNextInstruction();
-            /*
-            int i = getIndexOfCurrentInstruction();
-            programText.Select();
-            programText.Items[i].Selected = true;
-            programText.EnsureVisible(i); */
             doStep();
         }
 
@@ -181,7 +187,7 @@ namespace PdpGUI
         {
             this.Controls.Add(Display);
             IntPtr videoMemory = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * 512 * 256 / 8);
-            PerformProgram();
+            //PerformProgram();
             GetVideoBuffer(videoMemory);
             int bytes = 512 * 256 / 8;
             byte[] managedArray = new byte[bytes];
