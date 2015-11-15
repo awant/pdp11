@@ -22,10 +22,10 @@ PdpEmulator::~PdpEmulator() {
 	if (disasm)			delete disasm;			 disasm = nullptr;
 }
 
-void PdpEmulator::PerformCurrentInstruction() {
+bool PdpEmulator::PerformCurrentInstruction() {
 	word num = *GetWordFromMemory(GetRegisterValue(7));
 	SetRegisterValue(7, GetRegisterValue(7) + 2);
-	GetInstruction(num)();
+	return GetInstruction(num)();
 }
 
 std::string PdpEmulator::GetCurrentInstruction() {
@@ -41,7 +41,7 @@ std::string PdpEmulator::GetCurrentInstructionAndStep() {
 	return GetInstructionString(num, pc);
 }
 
-std::function<void()> PdpEmulator::GetInstruction(uword number) {
+std::function<bool()> PdpEmulator::GetInstruction(uword number) {
 	return instructionSet->GetInstruction(number);
 }
 

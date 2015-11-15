@@ -10,12 +10,9 @@ void GetVideoBuffer(char * buffer)
 	offset_t sizeOfVideoBuffer = 512 * 256 / 8;
 	auto emu = PdpEmulator::IPtr();
 	int num = 0;
-	while (1) {
-		word instr = *emu->GetWordFromMemory(emu->GetRegisterValue(7));
-		if (instr == 0)
-			break;
-		emu->PerformCurrentInstruction();
-		num++;
+	bool isEnd = false;
+	while (!isEnd) {
+		isEnd = emu->PerformCurrentInstruction();
 	}
 	memcpy(buffer, emu->GetByteFromMemory(startOfVideoBuffer), sizeOfVideoBuffer);
 }
@@ -41,8 +38,8 @@ byte GetFlags()
 	return emu->GetFlagsByte();
 }
 
-void PerformStep()
+bool PerformStep()
 {
 	auto emu = PdpEmulator::IPtr();
-	emu->PerformCurrentInstruction();
+	return emu->PerformCurrentInstruction();
 }

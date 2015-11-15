@@ -11,22 +11,23 @@ class InstructionSet {
 public:
 	InstructionSet(PdpEmulator * emulator);
 	~InstructionSet();
-	std::function<void()> GetInstruction(int number) { return table[number]; }
+	std::function<bool()> GetInstruction(int number) { return table[number]; }
 
-	void FreeInstruction() { assert(0); }
+	bool FreeInstruction() { assert(0); return true; }
 
-	void MOV(int instr);
-	void MOVB(int instr);
-	void ADD(int instr);
-	void SUB(int instr);
-	void SOB(int instr);
-	void CMP(int instr);
-	void JMP(int instr);
-	void BR(int instr);
-	void BGE(int instr);
-	void BEQ(int instr);
-	void INC(int instr);
-	void DEC(int instr);
+	bool HALT(int instr);
+	bool MOV(int instr);
+	bool MOVB(int instr);
+	bool ADD(int instr);
+	bool SUB(int instr);
+	bool SOB(int instr);
+	bool CMP(int instr);
+	bool JMP(int instr);
+	bool BR(int instr);
+	bool BGE(int instr);
+	bool BEQ(int instr);
+	bool INC(int instr);
+	bool DEC(int instr);
 
 private:
 	word * getBackOperand(word instruction, bool isByte);
@@ -36,7 +37,7 @@ private:
 	word * getBackOperandConstant(word instruction, bool isByte);
 	word * chooseAddressByMode(word mode, word number, bool isByte);
 
-	std::function<void()>	table[0177777];
+	std::function<bool()>	table[0200000];
 	PdpEmulator *			pdpEmulator;
 };
 
