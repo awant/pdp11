@@ -9,11 +9,6 @@ void GetVideoBuffer(char * buffer)
 	offset_t startOfVideoBuffer = 040000;
 	offset_t sizeOfVideoBuffer = 512 * 256 / 8;
 	auto emu = PdpEmulator::IPtr();
-	int num = 0;
-	bool isEnd = false;
-	while (!isEnd) {
-		isEnd = emu->PerformCurrentInstruction();
-	}
 	memcpy(buffer, emu->GetByteFromMemory(startOfVideoBuffer), sizeOfVideoBuffer);
 }
 
@@ -23,6 +18,19 @@ void GetCurrentInstruction(char * buffer)
 	auto string = emu->GetCurrentInstruction();
 	auto cString = string.c_str();
 	memcpy(buffer, cString, string.length() + 1);
+}
+
+void GetAllInstructions(char ** buffer)
+{
+	auto emu = PdpEmulator::IPtr();
+	bool isEnd = false;
+	int i = 0;
+	while (!isEnd) {
+		auto string = emu->GetCurrentInstruction();
+		auto cString = string.c_str();
+		memcpy(buffer[i++], cString, string.length() + 1);
+		isEnd = emu->PerformCurrentInstruction();
+	}
 }
 
 void GetRegisters(int * buffer)
@@ -42,4 +50,12 @@ bool PerformStep()
 {
 	auto emu = PdpEmulator::IPtr();
 	return emu->PerformCurrentInstruction();
+}
+
+void PerformProgram() {
+	auto emu = PdpEmulator::IPtr();
+	bool isEnd = false;
+	while (!isEnd) {
+		isEnd = emu->PerformCurrentInstruction();
+	}
 }

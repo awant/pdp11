@@ -26,6 +26,8 @@ namespace PdpGUI
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void GetVideoBuffer(IntPtr str);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void PerformProgram();
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ReleaseMemory(IntPtr ptr);
 
 
@@ -179,6 +181,7 @@ namespace PdpGUI
         {
             this.Controls.Add(Display);
             IntPtr videoMemory = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * 512 * 256 / 8);
+            PerformProgram();
             GetVideoBuffer(videoMemory);
             int bytes = 512 * 256 / 8;
             byte[] managedArray = new byte[bytes];

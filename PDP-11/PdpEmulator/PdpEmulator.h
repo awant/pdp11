@@ -39,18 +39,16 @@ public:
 
 	bool PerformCurrentInstruction();
 	std::string GetCurrentInstruction();
-	std::string GetCurrentInstructionAndStep();
 
 private:
 	bool getFlagBit(int n) { return (processorStatusWord >> n) & 1; }
 	void setFlagBit(int n, bool value) { processorStatusWord = (processorStatusWord | (1 << n)) & (~((1 << n) ^ (value << n))); }
 	void initProgram();
-	void loadProgram();
 
 	InstructionSet * instructionSet;
 	Disassembler * disasm;
 	word registers[8];
-	byte memory[0177777];
+	byte memory[0200000];
 	byte processorStatusWord; // IIITNZVC <- flags
 };
 

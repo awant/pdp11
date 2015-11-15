@@ -34,27 +34,12 @@ std::string PdpEmulator::GetCurrentInstruction() {
 	return GetInstructionString(num, pc);
 }
 
-std::string PdpEmulator::GetCurrentInstructionAndStep() {
-	offset_t pc = GetRegisterValue(7);
-	word num = *GetWordFromMemory(pc);
-	SetRegisterValue(7, pc + 2);
-	return GetInstructionString(num, pc);
-}
-
 std::function<bool()> PdpEmulator::GetInstruction(uword number) {
 	return instructionSet->GetInstruction(number);
 }
 
 std::string PdpEmulator::GetInstructionString(uword number, offset_t pc) {
 	return disasm->GetInstructionString(number, pc);
-}
-
-void PdpEmulator::loadProgram() {
-	word instr, value;
-	offset_t offset = registers[7];
-	instr = 012702; memcpy(memory + offset, &instr, sizeof(word)); offset += 2;
-	value = 123;	memcpy(memory + offset, &value, sizeof(word)); offset += 2;
-	instr = 010201; memcpy(memory + offset, &instr, sizeof(word)); offset += 2;
 }
 
 // image loading by Roman
