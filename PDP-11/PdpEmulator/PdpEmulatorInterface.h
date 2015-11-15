@@ -17,6 +17,7 @@ extern "C"
 	PDP_EMU_API void GetAllInstructions(char ** buffer);
 	PDP_EMU_API void GetRegisters(int * buffer);
 	PDP_EMU_API byte GetFlags();
+	PDP_EMU_API int GetInstructionNumber();
 	// can be used for checking
 	PDP_EMU_API void PerformProgram();
 }
