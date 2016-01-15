@@ -31,7 +31,6 @@ namespace PdpGUI
         public static extern int GetInstructionNumber();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void GetAllInstructions(IntPtr pInstructions);
-
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool PerformStep();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -78,7 +77,6 @@ namespace PdpGUI
             programText.Select();
             programText.Items[currentInstructionNumber].Selected = true;
             programText.EnsureVisible(currentInstructionNumber++);
-
         }
 
         private void fillProcInfo()
@@ -87,7 +85,7 @@ namespace PdpGUI
             {
                 procInfo.Items[i].Remove();
             }
-            string[] flagNames = {"", "", "", "", "N", "Z", "V", "C"};
+            string[] flagNames = { "", "", "", "", "N", "Z", "V", "C" };
             string register, flag;
             Int32[] valueOfRegistersInInts = new Int32[8];
             Marshal.Copy(valueOfRegisters, valueOfRegistersInInts, 0, 8);
@@ -95,7 +93,7 @@ namespace PdpGUI
             {
                 register = "R" + i.ToString() + " = " + ((UInt16)valueOfRegistersInInts[i]).ToString();
                 flag = flagNames[i];
-                if  (i >= 4)
+                if (i >= 4)
                     flag += " = " + ((valueOfFlag >> (8 - i)) & 1);
                 var item = new ListViewItem(new[] { register, flag });
                 procInfo.Items.Add(item);
@@ -106,6 +104,22 @@ namespace PdpGUI
         {
         }
 
+        // Main Loop
+        private void doStep()
+        {
+            PerformStep();
+            GetCurrentInstruction(currentInstruction);
+            GetRegisters(valueOfRegisters);
+            valueOfFlag = GetFlags();
+        }
+
+        private void fillInfo()
+        {
+            addNextInstructionInProgramText();
+            fillProcInfo();
+        }
+
+        // Buttons
         private void runButton_Click(object sender, EventArgs e)
         {
             mainTimer.Start();
@@ -118,26 +132,38 @@ namespace PdpGUI
 
         private void stepButton_Click(object sender, EventArgs e)
         {
-            step();
+            doStep();
+            fillInfo();
         }
 
+        private void stopButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // Proc Ticks
         private void mainTimer_Tick(object sender, EventArgs e)
         {
-            step();
-
+            doStep();
         }
 
-        // This is the main loop
-        private void step()
+        // Update Screen
+        private void screenUpdate_Tick(object sender, EventArgs e)
         {
-            PerformStep();
-            GetCurrentInstruction(currentInstruction);
-            addNextInstructionInProgramText();
-            GetRegisters(valueOfRegisters);
-            valueOfFlag = GetFlags();
-            fillProcInfo();
+            GetVideoBuffer(videoMemory);
+            int bytes = displayBorders.Width * displayBorders.Height / 8;
+            byte[] managedArray = new byte[bytes];
+            Marshal.Copy(videoMemory, managedArray, 0, bytes);
+            System.Drawing.Imaging.BitmapData bmpData = displayImage.LockBits(displayBorders, 
+                                                                              System.Drawing.Imaging.ImageLockMode.ReadWrite, 
+                                                                              displayImage.PixelFormat);
+            IntPtr ptr2 = bmpData.Scan0;
+            Marshal.Copy(managedArray, 0, ptr2, bytes);
+            displayImage.UnlockBits(bmpData);
+            Display.Image = displayImage;
         }
 
+        // Additional functions
         private void programText_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
         {
             e.Cancel = true;
@@ -149,33 +175,5 @@ namespace PdpGUI
             e.Cancel = true;
             e.NewWidth = procInfo.Columns[e.ColumnIndex].Width;
         }
-
-        private void doSteps(int number)
-        {
-            for (int i = 0; i < number; i++)
-            {
-                step();
-            }
-        }
-
-        private void screenUpdate_Tick(object sender, EventArgs e)
-        {
-            Console.WriteLine("Tick");
-            GetVideoBuffer(videoMemory);
-            int bytes = displayBorders.Width * displayBorders.Height / 8;
-            byte[] managedArray = new byte[bytes];
-            Marshal.Copy(videoMemory, managedArray, 0, bytes);
-            System.Drawing.Imaging.BitmapData bmpData = displayImage.LockBits(displayBorders, System.Drawing.Imaging.ImageLockMode.ReadWrite, displayImage.PixelFormat);
-            IntPtr ptr2 = bmpData.Scan0;
-            Marshal.Copy(managedArray, 0, ptr2, bytes);
-            displayImage.UnlockBits(bmpData);
-            Display.Image = displayImage;
-        }
-
-        private void stopButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

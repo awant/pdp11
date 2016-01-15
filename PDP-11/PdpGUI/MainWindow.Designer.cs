@@ -95,7 +95,7 @@
             // 
             // mainTimer
             // 
-            this.mainTimer.Interval = 15;
+            this.mainTimer.Interval = 1;
             this.mainTimer.Tick += new System.EventHandler(this.mainTimer_Tick);
             // 
             // procInfo
