@@ -36,6 +36,8 @@
             this.stepButton = new System.Windows.Forms.Button();
             this.mainTimer = new System.Windows.Forms.Timer(this.components);
             this.procInfo = new System.Windows.Forms.ListView();
+            this.screenUpdate = new System.Windows.Forms.Timer(this.components);
+            this.stopButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Display)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,14 +58,14 @@
             this.programText.Location = new System.Drawing.Point(531, 13);
             this.programText.MultiSelect = false;
             this.programText.Name = "programText";
-            this.programText.Size = new System.Drawing.Size(574, 366);
+            this.programText.Size = new System.Drawing.Size(479, 256);
             this.programText.TabIndex = 1;
             this.programText.UseCompatibleStateImageBehavior = false;
             this.programText.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.programText_ColumnWidthChanging);
             // 
             // runButton
             // 
-            this.runButton.Location = new System.Drawing.Point(201, 533);
+            this.runButton.Location = new System.Drawing.Point(13, 275);
             this.runButton.Name = "runButton";
             this.runButton.Size = new System.Drawing.Size(110, 45);
             this.runButton.TabIndex = 3;
@@ -73,7 +75,7 @@
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(13, 533);
+            this.resetButton.Location = new System.Drawing.Point(415, 416);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(110, 45);
             this.resetButton.TabIndex = 4;
@@ -83,7 +85,7 @@
             // 
             // stepButton
             // 
-            this.stepButton.Location = new System.Drawing.Point(415, 533);
+            this.stepButton.Location = new System.Drawing.Point(245, 275);
             this.stepButton.Name = "stepButton";
             this.stepButton.Size = new System.Drawing.Size(110, 45);
             this.stepButton.TabIndex = 5;
@@ -93,7 +95,7 @@
             // 
             // mainTimer
             // 
-            this.mainTimer.Interval = 750;
+            this.mainTimer.Interval = 15;
             this.mainTimer.Tick += new System.EventHandler(this.mainTimer_Tick);
             // 
             // procInfo
@@ -101,19 +103,35 @@
             this.procInfo.BackColor = System.Drawing.SystemColors.ControlLight;
             this.procInfo.Enabled = false;
             this.procInfo.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.procInfo.Location = new System.Drawing.Point(531, 385);
+            this.procInfo.Location = new System.Drawing.Point(531, 275);
             this.procInfo.MultiSelect = false;
             this.procInfo.Name = "procInfo";
-            this.procInfo.Size = new System.Drawing.Size(574, 193);
+            this.procInfo.Size = new System.Drawing.Size(479, 186);
             this.procInfo.TabIndex = 6;
             this.procInfo.UseCompatibleStateImageBehavior = false;
             this.procInfo.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.procInfo_ColumnWidthChanging);
+            // 
+            // screenUpdate
+            // 
+            this.screenUpdate.Interval = 750;
+            this.screenUpdate.Tick += new System.EventHandler(this.screenUpdate_Tick);
+            // 
+            // stopButton
+            // 
+            this.stopButton.Location = new System.Drawing.Point(129, 275);
+            this.stopButton.Name = "stopButton";
+            this.stopButton.Size = new System.Drawing.Size(110, 45);
+            this.stopButton.TabIndex = 7;
+            this.stopButton.Text = "Stop";
+            this.stopButton.UseVisualStyleBackColor = true;
+            this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1117, 590);
+            this.ClientSize = new System.Drawing.Size(1022, 466);
+            this.Controls.Add(this.stopButton);
             this.Controls.Add(this.procInfo);
             this.Controls.Add(this.stepButton);
             this.Controls.Add(this.resetButton);
@@ -138,6 +156,8 @@
         private System.Windows.Forms.Button stepButton;
         private System.Windows.Forms.Timer mainTimer;
         private System.Windows.Forms.ListView procInfo;
+        private System.Windows.Forms.Timer screenUpdate;
+        private System.Windows.Forms.Button stopButton;
 
     }
 }

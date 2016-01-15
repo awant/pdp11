@@ -33,54 +33,42 @@ namespace PdpGUI
         public static extern void GetAllInstructions(IntPtr pInstructions);
 
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Test(IntPtr pTest);
+        public static extern bool PerformStep();
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void PerformProgram();
 
         // Global State
         IntPtr valueOfRegisters = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Int32)) * 8);
         byte valueOfFlag;
         StringBuilder currentInstruction = new StringBuilder(60);
         int currentInstructionNumber = 0;
+        // Display
+        static Rectangle displayBorders = new Rectangle(0, 0, 512, 256);
+        Bitmap displayImage = new Bitmap(displayBorders.Width, displayBorders.Height, PixelFormat.Format1bppIndexed);
+        IntPtr videoMemory = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * displayBorders.Width * displayBorders.Height / 8);
 
         public MainWindow()
         {
             InitializeComponent();
             initInterface();
-            CreateBitmapAtRuntime();
-
-
-            // Check getting data
-            /*IntPtr ptr = GetData();
-            IntPtr strPtr;
-            for (int i = 0; i < 2; i++)
-            {
-                Console.WriteLine("i = " + i);
-                strPtr = Marshal.ReadIntPtr(ptr);
-                Console.WriteLine(Marshal.PtrToStringAnsi(strPtr));
-                ptr += Marshal.SizeOf(typeof(IntPtr));
-            }*/
-
+            screenUpdate.Start();
         }
 
         private void initInterface()
         {
+            // Display
+            this.Controls.Add(Display);
             // ProgramText
             programText.View = View.Details;
-            programText.Columns.Add("#", -2, HorizontalAlignment.Left);
-            programText.Columns.Add("Command", -2, HorizontalAlignment.Left);
-            fillProgramText();
+            programText.Columns.Add("#", 50, HorizontalAlignment.Left);
+            programText.Columns.Add("Command", 400, HorizontalAlignment.Left);
             // Proc
             procInfo.View = View.Details;
-            procInfo.Columns.Add("Registers", 284, HorizontalAlignment.Left);
-            procInfo.Columns.Add("Flags", 284, HorizontalAlignment.Left);
-        }
+            procInfo.Columns.Add("Registers", 237, HorizontalAlignment.Left);
+            procInfo.Columns.Add("Flags", 237, HorizontalAlignment.Left);
 
-        private void doStep()
-        {
             GetCurrentInstruction(currentInstruction);
             addNextInstructionInProgramText();
-            GetRegisters(valueOfRegisters);
-            valueOfFlag = GetFlags();
-            fillProcInfo();
         }
 
         private void addNextInstructionInProgramText()
@@ -91,20 +79,6 @@ namespace PdpGUI
             programText.Items[currentInstructionNumber].Selected = true;
             programText.EnsureVisible(currentInstructionNumber++);
 
-        }
-
-        private void fillProgramText()
-        {
-            int numberOfInstruction = GetInstructionNumber();
-
-            for (int i = 0; i < numberOfInstruction; i++)
-            {
-                //string str = Marshal.PtrToStringAnsi(pIntPtrArray[i]);
-                //Marshal.FreeCoTaskMem(pIntPtrArray[i]);
-                //Console.WriteLine(instructions[i]);
-                //var item = new ListViewItem(new[] { i.ToString(), str });
-                //programText.Items.Add(item);
-            }
         }
 
         private void fillProcInfo()
@@ -140,7 +114,6 @@ namespace PdpGUI
         private void resetButton_Click(object sender, EventArgs e)
         {
             mainTimer.Stop();
-            pdpReset();
         }
 
         private void stepButton_Click(object sender, EventArgs e)
@@ -151,12 +124,18 @@ namespace PdpGUI
         private void mainTimer_Tick(object sender, EventArgs e)
         {
             step();
+
         }
 
         // This is the main loop
         private void step()
         {
-            doStep();
+            PerformStep();
+            GetCurrentInstruction(currentInstruction);
+            addNextInstructionInProgramText();
+            GetRegisters(valueOfRegisters);
+            valueOfFlag = GetFlags();
+            fillProcInfo();
         }
 
         private void programText_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
@@ -171,34 +150,32 @@ namespace PdpGUI
             e.NewWidth = procInfo.Columns[e.ColumnIndex].Width;
         }
 
-        // Funcions for realisation:
-        int a = 0;
-        int getIndexOfCurrentInstruction()
+        private void doSteps(int number)
         {
-            return a++;
+            for (int i = 0; i < number; i++)
+            {
+                step();
+            }
         }
 
-        void pdpReset()
+        private void screenUpdate_Tick(object sender, EventArgs e)
         {
-            a = 0;
-        }
-
-        public void CreateBitmapAtRuntime()
-        {
-            this.Controls.Add(Display);
-            IntPtr videoMemory = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * 512 * 256 / 8);
-            //PerformProgram();
+            Console.WriteLine("Tick");
             GetVideoBuffer(videoMemory);
-            int bytes = 512 * 256 / 8;
+            int bytes = displayBorders.Width * displayBorders.Height / 8;
             byte[] managedArray = new byte[bytes];
             Marshal.Copy(videoMemory, managedArray, 0, bytes);
-            Bitmap bmpImage = new Bitmap(512, 256, PixelFormat.Format1bppIndexed);
-            Rectangle rect = new Rectangle(0, 0, 512, 256);
-            System.Drawing.Imaging.BitmapData bmpData = bmpImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmpImage.PixelFormat);
+            System.Drawing.Imaging.BitmapData bmpData = displayImage.LockBits(displayBorders, System.Drawing.Imaging.ImageLockMode.ReadWrite, displayImage.PixelFormat);
             IntPtr ptr2 = bmpData.Scan0;
             Marshal.Copy(managedArray, 0, ptr2, bytes);
-            bmpImage.UnlockBits(bmpData);
-            Display.Image = bmpImage;
+            displayImage.UnlockBits(bmpData);
+            Display.Image = displayImage;
         }
+
+        private void stopButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
