@@ -100,15 +100,32 @@ namespace PdpGUI
 
         private void addNextInstructionInProgramText()
         {
-            var item = new ListViewItem(new[] { currentInstructionNumber.ToString(), currentInstruction.ToString() });
-            programText.Items.Add(item);
+            GetInstructions(numberOfNextInstructions, nextInstructionsInString);
+            string[] instructions = nextInstructionsInString.ToString().Split(';');
+
+            if (programText.Items.Count > 0)
+            {
+                for (int i = 0; i < numberOfNextInstructions-1; i++)
+                {
+                    programText.Items[programText.Items.Count-1].Remove();
+                }
+            }
+
+            for (int i = 0; i < numberOfNextInstructions; i++)
+            {
+                var item = new ListViewItem(new[] { (currentInstructionNumber+i).ToString(), instructions[i] });
+                programText.Items.Add(item);
+            }
             programText.Select();
             programText.Items[currentInstructionNumber].Selected = true;
-            programText.EnsureVisible(currentInstructionNumber++);
+            programText.EnsureVisible(currentInstructionNumber + numberOfNextInstructions-1);
+            currentInstructionNumber++;
         }
 
         private void fillProcInfo()
         {
+            GetRegisters(valueOfRegisters);
+
             for (int i = procInfo.Items.Count - 1; i >= 0; i--)
             {
                 procInfo.Items[i].Remove();
@@ -140,11 +157,9 @@ namespace PdpGUI
                     isExec = true;
                 });
             }
-            GetInstructions(5, nextInstructionsInString);
-            Debug.WriteLine(nextInstructionsInString);
-
+ 
             GetCurrentInstruction(currentInstruction);
-            GetRegisters(valueOfRegisters);
+            //GetRegisters(valueOfRegisters);
             valueOfFlag = GetFlags();
         }
 
@@ -166,6 +181,7 @@ namespace PdpGUI
         {
             ResetProgram();
             isExec = false;
+            state.Text = "Reset";
         }
 
         private void stepButton_Click(object sender, EventArgs e)
@@ -173,6 +189,7 @@ namespace PdpGUI
             if (isExec) { return; }
             doStep();
             fillInfo();
+            state.Text = "Steps";
         }
 
         private void stopButton_Click(object sender, EventArgs e)
