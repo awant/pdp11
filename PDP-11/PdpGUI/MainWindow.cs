@@ -42,25 +42,24 @@ namespace PdpGUI
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void GetInstructions(int number, StringBuilder buffer);
 
-        // Global State
+        // Global state
         const long interval = 10;
         const int numberOfNextInstructions = 5;
-        const int lenInstructions = numberOfNextInstructions * 60;
+        const int lenOfInstruction = 60;
+        const int lenInstructions = numberOfNextInstructions * lenOfInstruction;
         bool isExec = false;
-        //
+
+        // Proc State
         IntPtr valueOfRegisters = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Int32)) * 8);
         byte valueOfFlag;
-
         StringBuilder nextInstructionsInString = new StringBuilder(lenInstructions);
-
-        StringBuilder currentInstruction = new StringBuilder(60);
         int currentInstructionNumber = 0;
         // Display
         static Rectangle displayBorders = new Rectangle(0, 0, 512, 256);
         Bitmap displayImage = new Bitmap(displayBorders.Width, displayBorders.Height, PixelFormat.Format1bppIndexed);
         IntPtr videoMemory = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * displayBorders.Width * displayBorders.Height / 8);
+        private readonly MicroLibrary.MicroTimer microTimer;
 
-        private readonly MicroLibrary.MicroTimer _microTimer;
 
         private void OnTimedEvent(object sender, MicroLibrary.MicroTimerEventArgs timerEventArgs)
         {
@@ -69,33 +68,28 @@ namespace PdpGUI
 
         public MainWindow()
         {
+            // Interface
             InitializeComponent();
-            _microTimer = new MicroLibrary.MicroTimer();
-            _microTimer.MicroTimerElapsed +=
-                new MicroLibrary.MicroTimer.MicroTimerElapsedEventHandler(OnTimedEvent);
+            programText.View = View.Details;
+            programText.Columns.Add("#", 50, HorizontalAlignment.Left);
+            programText.Columns.Add("Command", 400, HorizontalAlignment.Left);
+            procInfo.View = View.Details;
+            procInfo.Columns.Add("Registers", 237, HorizontalAlignment.Left);
+            procInfo.Columns.Add("Flags", 237, HorizontalAlignment.Left);
 
+            // Timer
+            microTimer = new MicroLibrary.MicroTimer();
+            microTimer.MicroTimerElapsed +=
+                new MicroLibrary.MicroTimer.MicroTimerElapsedEventHandler(OnTimedEvent);
+            microTimer.Interval = interval;
+
+            // Screen update
             screenUpdate.Start();
-            initInterface();
-            _microTimer.Interval = interval;
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
             Display.Image = displayImage;
-        }
-
-        private void initInterface()
-        {
-            // Display
-            this.Controls.Add(Display);
-            // ProgramText
-            programText.View = View.Details;
-            programText.Columns.Add("#", 50, HorizontalAlignment.Left);
-            programText.Columns.Add("Command", 400, HorizontalAlignment.Left);
-            // Proc
-            procInfo.View = View.Details;
-            procInfo.Columns.Add("Registers", 237, HorizontalAlignment.Left);
-            procInfo.Columns.Add("Flags", 237, HorizontalAlignment.Left);
         }
 
         private void addNextInstructionInProgramText()
@@ -113,7 +107,8 @@ namespace PdpGUI
 
             for (int i = 0; i < numberOfNextInstructions; i++)
             {
-                var item = new ListViewItem(new[] { (currentInstructionNumber+i).ToString(), instructions[i] });
+                string[] parsedInstr = instructions[i].ToString().Split(':');
+                var item = new ListViewItem(new[] { parsedInstr[0], parsedInstr[1] });
                 programText.Items.Add(item);
             }
             programText.Select();
@@ -150,7 +145,7 @@ namespace PdpGUI
         {
             if (PerformStep() == 1)
             {
-                _microTimer.Stop();
+                microTimer.Stop();
                 BeginInvoke((MethodInvoker)delegate
                 {
                     state.Text = "Stop";
@@ -158,8 +153,8 @@ namespace PdpGUI
                 });
             }
  
-            GetCurrentInstruction(currentInstruction);
-            //GetRegisters(valueOfRegisters);
+            //GetCurrentInstruction(currentInstruction);
+            GetRegisters(valueOfRegisters);
             valueOfFlag = GetFlags();
         }
 
@@ -174,7 +169,7 @@ namespace PdpGUI
         {
             if (isExec) { return; }
             state.Text = "Running...";
-            _microTimer.Start();
+            microTimer.Start();
         }
 
         private void resetButton_Click(object sender, EventArgs e)
@@ -195,7 +190,7 @@ namespace PdpGUI
         private void stopButton_Click(object sender, EventArgs e)
         {
             if (isExec) { return; }
-            _microTimer.Stop();
+            microTimer.Stop();
             state.Text = "Stop";
         }
 
