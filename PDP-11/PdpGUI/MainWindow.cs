@@ -39,6 +39,8 @@ namespace PdpGUI
         public static extern void ResetProgram();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void GetNextInstructions(StringBuilder ptr);
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void GetInstructions(int number, StringBuilder buffer);
 
         // Global State
         const long interval = 10;
@@ -49,7 +51,7 @@ namespace PdpGUI
         IntPtr valueOfRegisters = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Int32)) * 8);
         byte valueOfFlag;
 
-        //StringBuilder nextInstructions = new StringBuilder(lenInstructions);
+        StringBuilder nextInstructionsInString = new StringBuilder(lenInstructions);
 
         StringBuilder currentInstruction = new StringBuilder(60);
         int currentInstructionNumber = 0;
@@ -138,7 +140,9 @@ namespace PdpGUI
                     isExec = true;
                 });
             }
-            //Debug.WriteLine(currentInstruction);
+            GetInstructions(5, nextInstructionsInString);
+            Debug.WriteLine(nextInstructionsInString);
+
             GetCurrentInstruction(currentInstruction);
             GetRegisters(valueOfRegisters);
             valueOfFlag = GetFlags();
