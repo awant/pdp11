@@ -11,7 +11,9 @@ class Disassembler {
 public:
 	Disassembler(PdpEmulator * emulator);
 	~Disassembler();
-	std::string GetInstructionString(uword number, offset_t pc);
+	// string	- instruction
+	// int		- number of used words
+	std::pair<std::string, int> GetInstructionString(uword number, offset_t pc);
 
 private:
 	std::string getOperandString(word mode, word number);

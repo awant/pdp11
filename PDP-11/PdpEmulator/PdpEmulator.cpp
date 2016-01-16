@@ -10,8 +10,8 @@ PdpEmulator::PdpEmulator() {
 
 	for (int i = 0; i < 6; i++)
 		registers[i] = 0;
-	registers[6] = 037777;
-	registers[7] = 0100000;
+	registers[6] = PdpConstants::StackPointerBegin;
+	registers[7] = PdpConstants::ProgramCounterBegin;
 	processorStatusWord = 0;
 
 	initProgram();
@@ -31,15 +31,15 @@ bool PdpEmulator::PerformCurrentInstruction() {
 std::string PdpEmulator::GetCurrentInstruction() {
 	offset_t pc = GetRegisterValue(7);
 	word num = *GetWordFromMemory(pc);
-	return GetInstructionString(num, pc);
+	return GetInstructionString(num, pc).first;
 }
 
-std::function<bool()> PdpEmulator::GetInstruction(uword number) {
-	return instructionSet->GetInstruction(number);
+std::function<bool()> PdpEmulator::GetInstruction(uword instrCode) {
+	return instructionSet->GetInstruction(instrCode);
 }
 
-std::string PdpEmulator::GetInstructionString(uword number, offset_t pc) {
-	return disasm->GetInstructionString(number, pc);
+std::pair<std::string, int> PdpEmulator::GetInstructionString(uword instrCode, offset_t pc) {
+	return disasm->GetInstructionString(instrCode, pc);
 }
 
 

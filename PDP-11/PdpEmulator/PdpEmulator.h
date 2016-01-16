@@ -27,15 +27,15 @@ public:
 	void SetFlagZ(bool value) { setFlagBit(2, value); }
 	bool GetFlagN() { return getFlagBit(3); }
 	void SetFlagN(bool value) { setFlagBit(3, value); }
-	void SetRegisterValue(int number, word value) { registers[number] = value; }
-	word GetRegisterValue(int number) { return registers[number]; }
-	word * GetRegister(int number) { return &registers[number]; }
+	void SetRegisterValue(int regNumber, word value) { registers[regNumber] = value; }
+	word GetRegisterValue(int regNumber) { return registers[regNumber]; }
+	word * GetRegister(int regNumber) { return &registers[regNumber]; }
 	word * GetWordFromMemory(offset_t offset) { return (word*)(memory + offset); }
 	void SetWordToMemory(offset_t offset, void * value) { memcpy(memory + offset, value, sizeof(word)); }
 	byte * GetByteFromMemory(offset_t offset) { return (memory + offset); }
 	void SetByteToMemory(offset_t offset, void * value) { memcpy(memory + offset, value, sizeof(byte)); }
-	std::function<bool()> GetInstruction(uword number);
-	std::string GetInstructionString(uword number, offset_t pc);
+	std::function<bool()> GetInstruction(uword instrCode);
+	std::pair<std::string, int> GetInstructionString(uword instrCode, offset_t pc);
 
 	bool PerformCurrentInstruction();
 	std::string GetCurrentInstruction();

@@ -27,23 +27,21 @@ Disassembler::~Disassembler() {
 
 }
 
-std::string Disassembler::GetInstructionString(uword number, offset_t pc) {
-	std::string result = name[number] + " ";
-
+std::pair<std::string, int> Disassembler::GetInstructionString(uword number, offset_t pc) {
+	std::string result = std::to_string(pc) + "\t" + name[number] + " ";
+	int numberOfUsedWords = 1;
 	if (numOperands[number] == 2) {
 		word srcMode = (number >> 9) & 07;
 		word srcReg = (number >> 6) & 07;
 		word dstMode = (number >> 3) & 07;
 		word dstReg = number & 07;
-		// looking for constants from memory
-		if (srcMode == 2 && srcReg == 7)
+		// looking for constants from memory: operand is 027 and it can only be source
+		if (srcMode == 2 && srcReg == 7) {
 			result += "#" + std::to_string(long long(*pdpEmulator->GetWordFromMemory(pc + 2)));
-		else
+			numberOfUsedWords++;
+		} else {
 			result += getOperandString(srcMode, srcReg);
-		if (dstMode == 2 && dstReg == 7)
-			result += ", #" + std::to_string(long long(*pdpEmulator->GetWordFromMemory(pc + 2)));
-		else
-			result += ", " + getOperandString(dstMode, dstReg);
+		}
 	}
 	if (numOperands[number] == 1) {
 		word dstMode, dstReg, offset;
@@ -64,7 +62,7 @@ std::string Disassembler::GetInstructionString(uword number, offset_t pc) {
 			break;
 		}
 	}
-	return result;
+	return std::make_pair(result, numberOfUsedWords);
 }
 
 std::string Disassembler::getOperandString(word mode, word number) {
