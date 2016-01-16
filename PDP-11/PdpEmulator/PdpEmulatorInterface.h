@@ -21,6 +21,8 @@ extern "C"
 	PDP_EMU_API int GetInstructionNumber();
 	// can be used for checking
 	PDP_EMU_API void PerformProgram();
+
+	PDP_EMU_API void GetNextInstructions(std::string buffer[]);
 }
 
 #endif // _PDP_EMULATOR_INTERFACE_H_

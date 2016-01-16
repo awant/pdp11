@@ -20,6 +20,17 @@ void GetCurrentInstruction(char * buffer)
 	memcpy(buffer, cString, string.length() + 1);
 }
 
+void GetNextInstructions(std::string buffer[])
+{
+	std::string string = "HelloWorld";
+
+	for (int i = 0; i < 5; i++)
+	{
+		buffer[i++] = string;
+		// memcpy(buffer[i++], string.c_str(), string.length() + 1);
+	}
+}
+
 void GetAllInstructions(char ** buffer)
 {
 	auto emu = PdpEmulator::IPtr();
