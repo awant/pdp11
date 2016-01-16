@@ -11,28 +11,29 @@ void GetVideoBuffer(char * buffer)
 	memcpy(buffer, emu->GetByteFromMemory(PdpConstants::SizeOfVideoBuffer), PdpConstants::SizeOfVideoBuffer);
 }
 
-std::string getInstruction(offset_t offset)
-{
-	auto emu = PdpEmulator::IPtr();
-	word instrCode = *emu->GetWordFromMemory(offset);
-	auto instructionAndOffset = emu->GetInstructionString(instrCode, offset);
-	auto instrString = instructionAndOffset.first;
-	auto offsetToNext = instructionAndOffset.second * 2; // words -> bytes
-
-	instrString += ";";
-	instrCode = *emu->GetWordFromMemory(offset + offsetToNext);
-	instructionAndOffset = emu->GetInstructionString(instrCode, offset + offsetToNext);
-	instrString += instructionAndOffset.first;
-	offsetToNext += instructionAndOffset.second * 2; // words -> bytes
-
-	return instrString;
-}
-
 void GetCurrentInstruction(char * buffer)
 {
 	auto emu = PdpEmulator::IPtr();
 	offset_t pc = emu->GetRegisterValue(7);
-	auto instrString = getInstruction(pc);
+	word instrCode = *emu->GetWordFromMemory(pc);
+	auto instrString = emu->GetInstructionString(instrCode, pc).first;
+	auto instrStringC = instrString.c_str();
+	memcpy(buffer, instrStringC, strlen(instrStringC) + 1);
+}
+
+void GetInstructions(int number, char * buffer)
+{
+	auto emu = PdpEmulator::IPtr();
+	offset_t pc = emu->GetRegisterValue(7);
+	std::string instrString = "";
+	int offsetToNextInstruction = 0;
+	while (number-- > 0) {
+		word instrCode = *emu->GetWordFromMemory(pc + offsetToNextInstruction);
+		auto instructionAndOffset = emu->GetInstructionString(instrCode, pc + offsetToNextInstruction);
+		instrString += instructionAndOffset.first;
+		offsetToNextInstruction += instructionAndOffset.second * 2;
+		if (number != 0) instrString += ";";
+	}
 	auto instrStringC = instrString.c_str();
 	memcpy(buffer, instrStringC, strlen(instrStringC) + 1);
 }
