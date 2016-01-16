@@ -23,9 +23,12 @@ const char * getInstruction(offset_t offset)
 void GetCurrentInstruction(char * buffer)
 {
 	auto emu = PdpEmulator::IPtr();
-	auto pc = emu->GetRegisterValue(7);
+	/*auto pc = emu->GetRegisterValue(7);
 	auto instrString = getInstruction(pc);
-	memcpy(buffer, instrString, strlen(instrString) + 1);
+	memcpy(buffer, instrString, strlen(instrString) + 1);*/
+	auto string = emu->GetCurrentInstruction();
+	auto cString = string.c_str();
+	memcpy(buffer, cString, string.length() + 1);
 }
 
 void GetNextInstruction(char * buffer)

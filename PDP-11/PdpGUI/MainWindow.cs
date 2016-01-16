@@ -49,7 +49,7 @@ namespace PdpGUI
         IntPtr valueOfRegisters = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Int32)) * 8);
         byte valueOfFlag;
 
-        StringBuilder nextInstructions = new StringBuilder(lenInstructions);
+        //StringBuilder nextInstructions = new StringBuilder(lenInstructions);
 
         StringBuilder currentInstruction = new StringBuilder(60);
         int currentInstructionNumber = 0;
@@ -74,7 +74,6 @@ namespace PdpGUI
 
             screenUpdate.Start();
             initInterface();
-
             _microTimer.Interval = interval;
         }
 
@@ -95,8 +94,6 @@ namespace PdpGUI
             procInfo.View = View.Details;
             procInfo.Columns.Add("Registers", 237, HorizontalAlignment.Left);
             procInfo.Columns.Add("Flags", 237, HorizontalAlignment.Left);
-
-            UTF8Encoding encoding = new UTF8Encoding(true, true);
         }
 
         private void addNextInstructionInProgramText()
@@ -141,12 +138,8 @@ namespace PdpGUI
                     isExec = true;
                 });
             }
-            //(nextInstructions);
-            // Debug.WriteLine(nextInstructions[0]);
-
-            GetNextInstructions(nextInstructions);
-
-            //GetCurrentInstruction(currentInstruction);
+            //Debug.WriteLine(currentInstruction);
+            GetCurrentInstruction(currentInstruction);
             GetRegisters(valueOfRegisters);
             valueOfFlag = GetFlags();
         }

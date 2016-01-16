@@ -28,7 +28,7 @@ Disassembler::~Disassembler() {
 }
 
 std::pair<std::string, int> Disassembler::GetInstructionString(uword number, offset_t pc) {
-	std::string result = std::to_string(pc) + "\t" + name[number] + " ";
+	std::string result = name[number] + " ";
 	int numberOfUsedWords = 1;
 	if (numOperands[number] == 2) {
 		word srcMode = (number >> 9) & 07;
@@ -42,6 +42,10 @@ std::pair<std::string, int> Disassembler::GetInstructionString(uword number, off
 		} else {
 			result += getOperandString(srcMode, srcReg);
 		}
+		if (dstMode == 2 && dstReg == 7)
+			result += ", #" + std::to_string(long long(*pdpEmulator->GetWordFromMemory(pc + 2)));
+		else
+			result += ", " + getOperandString(dstMode, dstReg);
 	}
 	if (numOperands[number] == 1) {
 		word dstMode, dstReg, offset;
