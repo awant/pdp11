@@ -10,8 +10,8 @@ PdpEmulator::PdpEmulator() {
 
 	for (int i = 0; i < 6; i++)
 		registers[i] = 0;
-	registers[6] = 037777;
-	registers[7] = 0100000;
+	registers[6] = PdpConstants::StackPointerBegin;
+	registers[7] = PdpConstants::ProgramCounterBegin;
 	processorStatusWord = 0;
 
 	initProgram();

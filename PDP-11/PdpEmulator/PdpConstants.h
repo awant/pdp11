@@ -15,7 +15,10 @@ public:
 	static const byte MostPositiveByteUnsigned = 0377;
 	static const byte MostPositiveByte = 0177;
 	static const byte MostNegativeByte = 0200;
-
+	static const offset_t StartOfVideoBuffer = 040000;
+	static const offset_t SizeOfVideoBuffer = 512 * 256 / 8;
+	static const word ProgramCounterBegin = 0100000;
+	static const word StackPointerBegin = 0100000;
 };
 
 #endif // _PDP_CONSTANTS_H_s

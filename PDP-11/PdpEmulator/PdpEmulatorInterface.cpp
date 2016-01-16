@@ -1,15 +1,13 @@
 #include "stdafx.h"
 #include <fstream>
-#include <iostream>
 #include "PdpEmulatorInterface.h"
 #include "PdpEmulator.h"
+#include "PdpConstants.h"
 
 void GetVideoBuffer(char * buffer)
 {
-	offset_t startOfVideoBuffer = 040000;
-	offset_t sizeOfVideoBuffer = 512 * 256 / 8;
 	auto emu = PdpEmulator::IPtr();
-	memcpy(buffer, emu->GetByteFromMemory(startOfVideoBuffer), sizeOfVideoBuffer);
+	memcpy(buffer, emu->GetByteFromMemory(PdpConstants::SizeOfVideoBuffer), PdpConstants::SizeOfVideoBuffer);
 }
 
 const char * getInstruction(offset_t offset)
