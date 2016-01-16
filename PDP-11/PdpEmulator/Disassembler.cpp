@@ -29,7 +29,7 @@ Disassembler::~Disassembler() {
 }
 
 std::pair<std::string, int> Disassembler::GetInstructionString(uword number, offset_t pc) {
-	std::string result = std::to_string(pc) + " " + name[number] + " ";
+	std::string result = std::to_string(pc) + ":" + name[number] + " ";
 	int numberOfUsedWords = 1;
 	if (numOperands[number] == 2) {
 		word srcMode = (number >> 9) & 07;
