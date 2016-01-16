@@ -87,6 +87,13 @@ namespace PdpGUI
             screenUpdate.Start();
         }
 
+        private void clearInterface()
+        {
+            currentInstructionNumber = 0;
+            programText.Items.Clear();
+            procInfo.Items.Clear();
+        }
+
         private void MainWindow_Load(object sender, EventArgs e)
         {
             Display.Image = displayImage;
@@ -175,6 +182,7 @@ namespace PdpGUI
         private void resetButton_Click(object sender, EventArgs e)
         {
             ResetProgram();
+            clearInterface();
             isExec = false;
             state.Text = "Reset";
         }
