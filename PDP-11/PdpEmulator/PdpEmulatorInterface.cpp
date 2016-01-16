@@ -57,7 +57,7 @@ int PerformStep()
 
 void ResetProgram()
 {
-
+	PdpEmulator::destroyInstance();
 }
 
 void PerformProgram() {
