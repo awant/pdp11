@@ -8,6 +8,7 @@ Disassembler::Disassembler(PdpEmulator * emulator) {
 
 	for (int i = 0; i < 0177777; i++)		{ name[i] = "NULL"; numOperands[i] = 0; }
 
+	for (int i = 0; i <= 0; i++)			{ name[i] = "HALT"; numOperands[i] = 0; }
 	for (int i = 010000; i < 017777; i++)   { name[i] = "MOV"; numOperands[i] = 2; }
 	for (int i = 0110000; i < 0117777; i++) { name[i] = "MOVB"; numOperands[i] = 2; }
 	for (int i = 060000; i < 067777; i++)   { name[i] = "ADD"; numOperands[i] = 2; }
@@ -42,7 +43,12 @@ std::pair<std::string, int> Disassembler::GetInstructionString(uword number, off
 		} else {
 			result += getOperandString(srcMode, srcReg);
 		}
-		result += ", " + getOperandString(dstMode, dstReg);
+		if (dstMode == 2 && dstReg == 7) {
+			result += ", #" + std::to_string(long long(*pdpEmulator->GetWordFromMemory(pc + 2)));
+			numberOfUsedWords++;
+		} else {
+			result += ", " + getOperandString(dstMode, dstReg);
+		}
 	}
 	if (numOperands[number] == 1) {
 		word dstMode, dstReg, offset;
