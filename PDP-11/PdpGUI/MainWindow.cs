@@ -32,11 +32,13 @@ namespace PdpGUI
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void GetAllInstructions(IntPtr pInstructions);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool PerformStep();
+        public static extern int PerformStep();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void PerformProgram();
 
         // Global State
+        long interval = 100;
+        //
         IntPtr valueOfRegisters = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Int32)) * 8);
         byte valueOfFlag;
         StringBuilder currentInstruction = new StringBuilder(60);
@@ -46,11 +48,27 @@ namespace PdpGUI
         Bitmap displayImage = new Bitmap(displayBorders.Width, displayBorders.Height, PixelFormat.Format1bppIndexed);
         IntPtr videoMemory = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(byte)) * displayBorders.Width * displayBorders.Height / 8);
 
+        private readonly MicroLibrary.MicroTimer _microTimer;
+
+        private void OnTimedEvent(object sender,
+                                  MicroLibrary.MicroTimerEventArgs timerEventArgs)
+        {
+            doStep();
+            //fillInfo();
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+            _microTimer = new MicroLibrary.MicroTimer();
+            _microTimer.MicroTimerElapsed +=
+                new MicroLibrary.MicroTimer.MicroTimerElapsedEventHandler(OnTimedEvent);
+
             initInterface();
             screenUpdate.Start();
+
+            // Set timer interval
+            _microTimer.Interval = interval;
         }
 
         private void initInterface()
@@ -107,7 +125,10 @@ namespace PdpGUI
         // Main Loop
         private void doStep()
         {
-            PerformStep();
+            if (PerformStep() == 1) 
+            {
+                _microTimer.Stop();
+            }
             GetCurrentInstruction(currentInstruction);
             GetRegisters(valueOfRegisters);
             valueOfFlag = GetFlags();
@@ -122,7 +143,9 @@ namespace PdpGUI
         // Buttons
         private void runButton_Click(object sender, EventArgs e)
         {
-            mainTimer.Start();
+            //mainTimer.Start();
+            // Start timer
+            _microTimer.Start();
         }
 
         private void resetButton_Click(object sender, EventArgs e)

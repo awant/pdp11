@@ -130,7 +130,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1022, 466);
+            this.ClientSize = new System.Drawing.Size(1022, 474);
             this.Controls.Add(this.stopButton);
             this.Controls.Add(this.procInfo);
             this.Controls.Add(this.stepButton);

@@ -64,7 +64,6 @@ std::string Disassembler::GetInstructionString(uword number, offset_t pc) {
 			break;
 		}
 	}
-
 	return result;
 }
 

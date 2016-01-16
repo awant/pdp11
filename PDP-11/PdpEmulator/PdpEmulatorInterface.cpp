@@ -58,7 +58,7 @@ int GetInstructionNumber()
 	return num;
 }
 
-bool PerformStep()
+int PerformStep()
 {
 	auto emu = PdpEmulator::IPtr();
 	return emu->PerformCurrentInstruction();
