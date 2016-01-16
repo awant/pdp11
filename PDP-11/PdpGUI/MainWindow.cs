@@ -37,13 +37,20 @@ namespace PdpGUI
         public static extern void PerformProgram();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void ResetProgram();
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void GetNextInstructions(StringBuilder ptr);
 
         // Global State
-        long interval = 10;
+        const long interval = 10;
+        const int numberOfNextInstructions = 5;
+        const int lenInstructions = numberOfNextInstructions * 60;
         bool isExec = false;
         //
         IntPtr valueOfRegisters = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Int32)) * 8);
         byte valueOfFlag;
+
+        StringBuilder nextInstructions = new StringBuilder(lenInstructions);
+
         StringBuilder currentInstruction = new StringBuilder(60);
         int currentInstructionNumber = 0;
         // Display
@@ -53,8 +60,7 @@ namespace PdpGUI
 
         private readonly MicroLibrary.MicroTimer _microTimer;
 
-        private void OnTimedEvent(object sender,
-                                  MicroLibrary.MicroTimerEventArgs timerEventArgs)
+        private void OnTimedEvent(object sender, MicroLibrary.MicroTimerEventArgs timerEventArgs)
         {
             doStep();
         }
@@ -66,11 +72,15 @@ namespace PdpGUI
             _microTimer.MicroTimerElapsed +=
                 new MicroLibrary.MicroTimer.MicroTimerElapsedEventHandler(OnTimedEvent);
 
-            initInterface();
             screenUpdate.Start();
+            initInterface();
 
-            // Set timer interval
             _microTimer.Interval = interval;
+        }
+
+        private void MainWindow_Load(object sender, EventArgs e)
+        {
+            Display.Image = displayImage;
         }
 
         private void initInterface()
@@ -86,8 +96,7 @@ namespace PdpGUI
             procInfo.Columns.Add("Registers", 237, HorizontalAlignment.Left);
             procInfo.Columns.Add("Flags", 237, HorizontalAlignment.Left);
 
-            GetCurrentInstruction(currentInstruction);
-            addNextInstructionInProgramText();
+            UTF8Encoding encoding = new UTF8Encoding(true, true);
         }
 
         private void addNextInstructionInProgramText()
@@ -120,10 +129,6 @@ namespace PdpGUI
             }
         }
 
-        private void MainWindow_Load(object sender, EventArgs e)
-        {
-        }
-
         // Main Loop
         private void doStep()
         {
@@ -136,7 +141,12 @@ namespace PdpGUI
                     isExec = true;
                 });
             }
-            GetCurrentInstruction(currentInstruction);
+            //(nextInstructions);
+            // Debug.WriteLine(nextInstructions[0]);
+
+            GetNextInstructions(nextInstructions);
+
+            //GetCurrentInstruction(currentInstruction);
             GetRegisters(valueOfRegisters);
             valueOfFlag = GetFlags();
         }
@@ -170,6 +180,7 @@ namespace PdpGUI
 
         private void stopButton_Click(object sender, EventArgs e)
         {
+            if (isExec) { return; }
             _microTimer.Stop();
             state.Text = "Stop";
         }
