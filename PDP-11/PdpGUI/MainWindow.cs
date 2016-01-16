@@ -35,6 +35,8 @@ namespace PdpGUI
         public static extern int PerformStep();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void PerformProgram();
+        [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ResetProgram();
 
         // Global State
         long interval = 10;
@@ -155,6 +157,7 @@ namespace PdpGUI
 
         private void resetButton_Click(object sender, EventArgs e)
         {
+            ResetProgram();
             isExec = false;
         }
 

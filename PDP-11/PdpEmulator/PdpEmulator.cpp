@@ -42,6 +42,7 @@ std::string PdpEmulator::GetInstructionString(uword number, offset_t pc) {
 	return disasm->GetInstructionString(number, pc);
 }
 
+
 // image loading by Roman
 unsigned char getByte(const char* data)
 {

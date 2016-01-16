@@ -64,6 +64,11 @@ int PerformStep()
 	return emu->PerformCurrentInstruction();
 }
 
+void ResetProgram()
+{
+
+}
+
 void PerformProgram() {
 	auto emu = PdpEmulator::IPtr();
 	bool isEnd = false;

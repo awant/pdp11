@@ -12,6 +12,7 @@
 extern "C"
 {
 	PDP_EMU_API int PerformStep();
+	PDP_EMU_API void ResetProgram();
 	PDP_EMU_API void GetVideoBuffer(char * buffer);
 	PDP_EMU_API void GetCurrentInstruction(char * buffer);
 	PDP_EMU_API void GetAllInstructions(char ** buffer);
