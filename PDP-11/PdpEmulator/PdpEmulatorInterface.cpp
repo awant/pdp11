@@ -4,36 +4,37 @@
 #include "PdpEmulator.h"
 #include "PdpConstants.h"
 
+
 void GetVideoBuffer(char * buffer)
 {
 	auto emu = PdpEmulator::IPtr();
 	memcpy(buffer, emu->GetByteFromMemory(PdpConstants::SizeOfVideoBuffer), PdpConstants::SizeOfVideoBuffer);
 }
 
-const char * getInstruction(offset_t offset)
+std::string getInstruction(offset_t offset)
 {
 	auto emu = PdpEmulator::IPtr();
-	auto instrCode = *emu->GetWordFromMemory(offset);
+	word instrCode = *emu->GetWordFromMemory(offset);
 	auto instructionAndOffset = emu->GetInstructionString(instrCode, offset);
 	auto instrString = instructionAndOffset.first;
 	auto offsetToNext = instructionAndOffset.second * 2; // words -> bytes
-	return instrString.c_str();
+
+	instrString += ";";
+	instrCode = *emu->GetWordFromMemory(offset + offsetToNext);
+	instructionAndOffset = emu->GetInstructionString(instrCode, offset + offsetToNext);
+	instrString += instructionAndOffset.first;
+	offsetToNext += instructionAndOffset.second * 2; // words -> bytes
+
+	return instrString;
 }
 
 void GetCurrentInstruction(char * buffer)
 {
 	auto emu = PdpEmulator::IPtr();
-	auto pc = emu->GetRegisterValue(7);
+	offset_t pc = emu->GetRegisterValue(7);
 	auto instrString = getInstruction(pc);
-	memcpy(buffer, instrString, strlen(instrString) + 1);
-}
-
-void GetNextInstruction(char * buffer)
-{
-	auto emu = PdpEmulator::IPtr();
-	auto pc = emu->GetRegisterValue(7);
-	// need to calculate step: 1 or 2 words
-
+	auto instrStringC = instrString.c_str();
+	memcpy(buffer, instrStringC, strlen(instrStringC) + 1);
 }
 
 void GetRegisters(int * buffer)
