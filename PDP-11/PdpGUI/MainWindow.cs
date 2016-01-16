@@ -37,7 +37,8 @@ namespace PdpGUI
         public static extern void PerformProgram();
 
         // Global State
-        long interval = 100;
+        long interval = 10;
+        bool isExec = false;
         //
         IntPtr valueOfRegisters = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Int32)) * 8);
         byte valueOfFlag;
@@ -54,7 +55,6 @@ namespace PdpGUI
                                   MicroLibrary.MicroTimerEventArgs timerEventArgs)
         {
             doStep();
-            //fillInfo();
         }
 
         public MainWindow()
@@ -125,9 +125,14 @@ namespace PdpGUI
         // Main Loop
         private void doStep()
         {
-            if (PerformStep() == 1) 
+            if (PerformStep() == 1)
             {
                 _microTimer.Stop();
+                BeginInvoke((MethodInvoker)delegate
+                {
+                    state.Text = "Stop";
+                    isExec = true;
+                });
             }
             GetCurrentInstruction(currentInstruction);
             GetRegisters(valueOfRegisters);
@@ -143,31 +148,27 @@ namespace PdpGUI
         // Buttons
         private void runButton_Click(object sender, EventArgs e)
         {
-            //mainTimer.Start();
-            // Start timer
+            if (isExec) { return; }
+            state.Text = "Running...";
             _microTimer.Start();
         }
 
         private void resetButton_Click(object sender, EventArgs e)
         {
-            mainTimer.Stop();
+            isExec = false;
         }
 
         private void stepButton_Click(object sender, EventArgs e)
         {
+            if (isExec) { return; }
             doStep();
             fillInfo();
         }
 
         private void stopButton_Click(object sender, EventArgs e)
         {
-
-        }
-
-        // Proc Ticks
-        private void mainTimer_Tick(object sender, EventArgs e)
-        {
-            doStep();
+            _microTimer.Stop();
+            state.Text = "Stop";
         }
 
         // Update Screen

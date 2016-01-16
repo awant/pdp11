@@ -34,10 +34,10 @@
             this.runButton = new System.Windows.Forms.Button();
             this.resetButton = new System.Windows.Forms.Button();
             this.stepButton = new System.Windows.Forms.Button();
-            this.mainTimer = new System.Windows.Forms.Timer(this.components);
             this.procInfo = new System.Windows.Forms.ListView();
             this.screenUpdate = new System.Windows.Forms.Timer(this.components);
             this.stopButton = new System.Windows.Forms.Button();
+            this.state = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Display)).BeginInit();
             this.SuspendLayout();
             // 
@@ -93,11 +93,6 @@
             this.stepButton.UseVisualStyleBackColor = true;
             this.stepButton.Click += new System.EventHandler(this.stepButton_Click);
             // 
-            // mainTimer
-            // 
-            this.mainTimer.Interval = 1;
-            this.mainTimer.Tick += new System.EventHandler(this.mainTimer_Tick);
-            // 
             // procInfo
             // 
             this.procInfo.BackColor = System.Drawing.SystemColors.ControlLight;
@@ -126,11 +121,22 @@
             this.stopButton.UseVisualStyleBackColor = true;
             this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
             // 
+            // state
+            // 
+            this.state.BackColor = System.Drawing.SystemColors.Window;
+            this.state.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.state.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.3F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.state.Location = new System.Drawing.Point(13, 335);
+            this.state.Name = "state";
+            this.state.Size = new System.Drawing.Size(110, 21);
+            this.state.TabIndex = 9;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1022, 474);
+            this.Controls.Add(this.state);
             this.Controls.Add(this.stopButton);
             this.Controls.Add(this.procInfo);
             this.Controls.Add(this.stepButton);
@@ -154,10 +160,10 @@
         private System.Windows.Forms.Button runButton;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Button stepButton;
-        private System.Windows.Forms.Timer mainTimer;
         private System.Windows.Forms.ListView procInfo;
         private System.Windows.Forms.Timer screenUpdate;
         private System.Windows.Forms.Button stopButton;
+        private System.Windows.Forms.Label state;
 
     }
 }
