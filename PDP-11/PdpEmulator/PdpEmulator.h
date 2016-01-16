@@ -35,7 +35,7 @@ public:
 	byte * GetByteFromMemory(offset_t offset) { return (memory + offset); }
 	void SetByteToMemory(offset_t offset, void * value) { memcpy(memory + offset, value, sizeof(byte)); }
 	std::function<bool()> GetInstruction(uword instrCode);
-	std::string GetInstructionString(uword instrCode, offset_t pc);
+	std::pair<std::string, int> GetInstructionString(uword instrCode, offset_t pc);
 
 	bool PerformCurrentInstruction();
 	std::string GetCurrentInstruction();

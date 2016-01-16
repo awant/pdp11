@@ -14,7 +14,9 @@ const char * getInstruction(offset_t offset)
 {
 	auto emu = PdpEmulator::IPtr();
 	auto instrCode = *emu->GetWordFromMemory(offset);
-	auto instrString = emu->GetInstructionString(instrCode, offset);
+	auto instructionAndOffset = emu->GetInstructionString(instrCode, offset);
+	auto instrString = instructionAndOffset.first;
+	auto offsetToNext = instructionAndOffset.second * 2; // words -> bytes
 	return instrString.c_str();
 }
 

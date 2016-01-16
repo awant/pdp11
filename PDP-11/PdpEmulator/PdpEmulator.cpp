@@ -31,14 +31,14 @@ bool PdpEmulator::PerformCurrentInstruction() {
 std::string PdpEmulator::GetCurrentInstruction() {
 	offset_t pc = GetRegisterValue(7);
 	word num = *GetWordFromMemory(pc);
-	return GetInstructionString(num, pc);
+	return GetInstructionString(num, pc).first;
 }
 
 std::function<bool()> PdpEmulator::GetInstruction(uword instrCode) {
 	return instructionSet->GetInstruction(instrCode);
 }
 
-std::string PdpEmulator::GetInstructionString(uword instrCode, offset_t pc) {
+std::pair<std::string, int> PdpEmulator::GetInstructionString(uword instrCode, offset_t pc) {
 	return disasm->GetInstructionString(instrCode, pc);
 }
 
