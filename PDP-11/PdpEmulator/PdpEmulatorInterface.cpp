@@ -12,25 +12,28 @@ void GetVideoBuffer(char * buffer)
 	memcpy(buffer, emu->GetByteFromMemory(startOfVideoBuffer), sizeOfVideoBuffer);
 }
 
+const char * getInstruction(offset_t offset)
+{
+	auto emu = PdpEmulator::IPtr();
+	auto instrCode = *emu->GetWordFromMemory(offset);
+	auto instrString = emu->GetInstructionString(instrCode, offset);
+	return instrString.c_str();
+}
+
 void GetCurrentInstruction(char * buffer)
 {
 	auto emu = PdpEmulator::IPtr();
-	auto string = emu->GetCurrentInstruction();
-	auto cString = string.c_str();
-	memcpy(buffer, cString, string.length() + 1);
+	auto pc = emu->GetRegisterValue(7);
+	auto instrString = getInstruction(pc);
+	memcpy(buffer, instrString, strlen(instrString) + 1);
 }
 
-void GetAllInstructions(char ** buffer)
+void GetNextInstruction(char * buffer)
 {
 	auto emu = PdpEmulator::IPtr();
-	bool isEnd = false;
-	int i = 0;
-	while (!isEnd) {
-		auto string = emu->GetCurrentInstruction();
-		auto cString = string.c_str();
-		memcpy(buffer[i++], cString, string.length() + 1);
-		isEnd = emu->PerformCurrentInstruction();
-	}
+	auto pc = emu->GetRegisterValue(7);
+	// need to calculate step: 1 or 2 words
+
 }
 
 void GetRegisters(int * buffer)
@@ -46,18 +49,6 @@ byte GetFlags()
 	return emu->GetFlagsByte();
 }
 
-int GetInstructionNumber()
-{
-	auto emu = PdpEmulator::IPtr();
-	bool isEnd = false;
-	int num = 0;
-	while (!isEnd) {
-		num++;
-		isEnd = emu->PerformCurrentInstruction();
-	}
-	return num;
-}
-
 int PerformStep()
 {
 	auto emu = PdpEmulator::IPtr();
@@ -70,6 +61,7 @@ void ResetProgram()
 }
 
 void PerformProgram() {
+	PdpEmulator::destroyInstance();
 	auto emu = PdpEmulator::IPtr();
 	bool isEnd = false;
 	while (!isEnd) {

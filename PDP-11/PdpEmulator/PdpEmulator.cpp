@@ -34,12 +34,12 @@ std::string PdpEmulator::GetCurrentInstruction() {
 	return GetInstructionString(num, pc);
 }
 
-std::function<bool()> PdpEmulator::GetInstruction(uword number) {
-	return instructionSet->GetInstruction(number);
+std::function<bool()> PdpEmulator::GetInstruction(uword instrCode) {
+	return instructionSet->GetInstruction(instrCode);
 }
 
-std::string PdpEmulator::GetInstructionString(uword number, offset_t pc) {
-	return disasm->GetInstructionString(number, pc);
+std::string PdpEmulator::GetInstructionString(uword instrCode, offset_t pc) {
+	return disasm->GetInstructionString(instrCode, pc);
 }
 
 
