@@ -26,7 +26,7 @@ namespace PdpGUI
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern byte GetFlags();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern byte GetCurrentInstruction(StringBuilder ptr);
+        public static extern void GetCurrentInstruction(StringBuilder ptr);
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int GetInstructionNumber();
         [DllImport("PdpEmulator.dll", CallingConvention = CallingConvention.Cdecl)]
