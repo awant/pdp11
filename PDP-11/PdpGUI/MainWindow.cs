@@ -43,7 +43,7 @@ namespace PdpGUI
         public static extern void GetInstructions(int number, StringBuilder buffer);
 
         // Global state
-        const long interval = 10;
+        const long interval = 100;
         const int numberOfNextInstructions = 5;
         const int lenOfInstruction = 60;
         const int lenInstructions = numberOfNextInstructions * lenOfInstruction;
@@ -160,7 +160,6 @@ namespace PdpGUI
                 });
             }
  
-            //GetCurrentInstruction(currentInstruction);
             GetRegisters(valueOfRegisters);
             valueOfFlag = GetFlags();
         }
