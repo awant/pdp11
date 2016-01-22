@@ -1,0 +1,1 @@
+Converter from bmp (oldImage.bmp) to raw (image.bmp).
